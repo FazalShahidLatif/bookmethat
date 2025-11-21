@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import emailRoutes from './routes/email';
 import {
   helmetConfig,
   generalRateLimit,
@@ -71,6 +72,9 @@ app.post('/api/v1/bookings', bookingRateLimit, (req, res) => {
 app.get('/api/v1/bookings/:id', (req, res) => {
   res.json({ message: 'Get booking endpoint - coming soon' });
 });
+
+// Email routes
+app.use('/api/v1/email', emailRoutes);
 
 // 404 Handler
 app.use((req, res) => {
