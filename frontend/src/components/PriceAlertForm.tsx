@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { trackPriceAlert } from '@/lib/analytics';
 
 interface PriceAlertProps {
   defaultDestination?: string;
@@ -22,6 +23,12 @@ export default function PriceAlertForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
+    
+    // Track price alert signup
+    trackPriceAlert({
+      destination: formData.destination,
+      email_domain: formData.email.split('@')[1] || 'unknown',
+    });
     
     // Simulate API call
     setTimeout(() => {

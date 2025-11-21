@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy - How We Protect Your Data | bookmethat',
@@ -14,19 +16,21 @@ export default function PrivacyPolicyPage() {
   const lastUpdated = 'November 21, 2025';
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16 px-4">
-        <div className="max-w-4xl mx-auto">
-          <Link href="/" className="text-sm text-blue-100 hover:text-white mb-4 inline-block">
-            ← Back to Home
-          </Link>
-          <h1 className="text-5xl font-bold mb-4">Privacy Policy</h1>
-          <p className="text-xl text-blue-100">
-            Last Updated: {lastUpdated}
-          </p>
-        </div>
-      </header>
+    <>
+      <Header />
+      <main className="min-h-screen bg-white">
+        {/* Hero Header */}
+        <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16 px-4">
+          <div className="max-w-4xl mx-auto">
+            <Link href="/" className="text-sm text-blue-100 hover:text-white mb-4 inline-block">
+              ← Back to Home
+            </Link>
+            <h1 className="text-5xl font-bold mb-4">Privacy Policy</h1>
+            <p className="text-xl text-blue-100">
+              Last Updated: {lastUpdated}
+            </p>
+          </div>
+        </header>
 
       {/* Content */}
       <article className="max-w-4xl mx-auto px-4 py-12 prose prose-lg">
@@ -259,5 +263,7 @@ export default function PrivacyPolicyPage() {
         </div>
       </footer>
     </main>
+      <Footer />
+    </>
   );
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import { trackShare } from '@/lib/analytics';
+
 interface SocialShareButtonsProps {
   url: string;
   title: string;
@@ -16,10 +18,24 @@ export default function SocialShareButtons({ url, title, description }: SocialSh
   };
 
   const handleShare = (platform: keyof typeof shareUrls) => {
+    // Track the share event
+    trackShare({
+      method: platform as any,
+      content_type: 'blog_post',
+      item_id: url,
+    });
+    
     window.open(shareUrls[platform], '_blank', 'width=600,height=400');
   };
 
   const handleCopyLink = () => {
+    // Track copy link event
+    trackShare({
+      method: 'copy',
+      content_type: 'blog_post',
+      item_id: url,
+    });
+    
     navigator.clipboard.writeText(url);
     // Could add a toast notification here
     alert('Link copied to clipboard!');

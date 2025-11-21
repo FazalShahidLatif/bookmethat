@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { trackNewsletterSignup } from '@/lib/analytics';
 
 interface NewsletterProps {
   variant?: 'inline' | 'popup';
@@ -19,6 +20,9 @@ export default function NewsletterSignup({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('loading');
+    
+    // Track newsletter signup
+    trackNewsletterSignup(email);
     
     // Simulate API call
     setTimeout(() => {
