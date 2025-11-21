@@ -2,6 +2,9 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import OptimizedImage from '@/components/OptimizedImage';
 import { getDestinationImage } from '@/lib/images';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import SocialShareButtons from '@/components/SocialShareButtons';
 
 export const metadata: Metadata = {
   title: 'Hidden Gems: Undiscovered Destinations Near Popular Tourist Spots | bookmethat',
@@ -10,8 +13,13 @@ export const metadata: Metadata = {
 };
 
 export default function HiddenGemsPage() {
+  const pageUrl = 'https://bookmethat.com/blog/hidden-gems-alternative-destinations';
+  const pageTitle = 'Hidden Gems: Undiscovered Destinations Near Popular Tourist Spots';
+  
   return (
-    <article className="min-h-screen bg-white">
+    <>
+      <Header />
+      <article className="min-h-screen bg-white">
       {/* Hero */}
       <div className="relative h-96 bg-gray-900">
         <OptimizedImage
@@ -209,3 +217,4 @@ export default function HiddenGemsPage() {
     </article>
   );
 }
+
