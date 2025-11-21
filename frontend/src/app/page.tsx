@@ -1,8 +1,8 @@
 export default function HomePage() {
   // JSON-LD Schema for Organization
   const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'TravelAgency',
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
     name: 'bookmethat',
     description: 'Online travel agency for booking hotels, flights, car rentals, and activities worldwide',
     url: 'https://bookmethat.com',

@@ -1,0 +1,67 @@
+{
+  "name": "bookmethat - Travel Booking Platform",
+  "short_name": "bookmethat",
+  "description": "Book hotels, flights, car rentals, and activities worldwide",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["travel", "lifestyle", "productivity"],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Search Hotels",
+      "short_name": "Hotels",
+      "description": "Search and book hotels",
+      "url": "/hotels",
+      "icons": [
+        {
+          "src": "/icon-hotels.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Search Flights",
+      "short_name": "Flights",
+      "description": "Search and book flights",
+      "url": "/flights",
+      "icons": [
+        {
+          "src": "/icon-flights.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}
