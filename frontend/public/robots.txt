@@ -1,0 +1,33 @@
+# robots.txt for bookmethat.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /account/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /checkout/
+
+# High-value pages for crawling
+Allow: /hotels
+Allow: /flights
+Allow: /cars
+Allow: /activities
+Allow: /esim
+Allow: /deals
+Allow: /destinations
+
+# Sitemap location
+Sitemap: https://bookmethat.com/sitemap.xml
+Sitemap: https://bookmethat.com/sitemap-hotels.xml
+Sitemap: https://bookmethat.com/sitemap-destinations.xml
+
+# Crawl-delay for specific bots
+User-agent: Googlebot
+Crawl-delay: 0
+
+User-agent: Bingbot
+Crawl-delay: 0
+
+User-agent: Yandex
+Crawl-delay: 1
