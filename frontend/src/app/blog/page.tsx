@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Travel Blog - Tips, Guides & Destination Inspiration | bookmethat',
@@ -134,18 +136,16 @@ export default function BlogPage() {
 
   return (
     <>
+      <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(blogSchema) }}
       />
 
       <main className="min-h-screen bg-white">
-        {/* Header */}
-        <header className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16 px-4">
+        {/* Hero Section */}
+        <section className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16 px-4">
           <div className="max-w-6xl mx-auto">
-            <Link href="/" className="text-sm text-blue-100 hover:text-white mb-4 inline-block">
-              ← Back to Home
-            </Link>
             <h1 className="text-5xl font-bold mb-4">Travel Blog</h1>
             <p className="text-xl text-blue-100">
               Expert tips, destination guides, and travel inspiration
@@ -266,21 +266,8 @@ export default function BlogPage() {
             </p>
           </div>
         </section>
-
-        {/* Footer */}
-        <footer className="bg-gray-900 text-white py-8">
-          <div className="max-w-6xl mx-auto px-4 text-center">
-            <div className="flex justify-center gap-6 mb-4">
-              <Link href="/" className="text-gray-400 hover:text-white transition">Home</Link>
-              <Link href="/about" className="text-gray-400 hover:text-white transition">About</Link>
-              <Link href="/contact" className="text-gray-400 hover:text-white transition">Contact</Link>
-              <Link href="/privacy" className="text-gray-400 hover:text-white transition">Privacy</Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white transition">Terms</Link>
-            </div>
-            <p className="text-sm text-gray-400">© 2025 bookmethat. All rights reserved.</p>
-          </div>
-        </footer>
-      </main>
+    </main>
+    <Footer />
     </>
   );
 }

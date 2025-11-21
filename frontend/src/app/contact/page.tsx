@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Contact Us - bookmethat | 24/7 Customer Support',
@@ -8,7 +10,9 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <>
+      <Header />
+      <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       {/* Hero */}
       <section className="relative bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
@@ -143,5 +147,7 @@ export default function ContactPage() {
         </div>
       </section>
     </main>
+    <Footer />
+    </>
   );
 }

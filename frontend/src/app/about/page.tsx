@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import OptimizedImage from '@/components/OptimizedImage';
 import { getDestinationImage } from '@/lib/images';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'About Us - bookmethat | Your Trusted Travel Partner',
@@ -11,7 +13,9 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
+    <>
+      <Header />
+      <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
@@ -190,5 +194,7 @@ export default function AboutPage() {
         </div>
       </section>
     </main>
+    <Footer />
+    </>
   );
 }
