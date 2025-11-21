@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import OptimizedImage from '@/components/OptimizedImage';
 import { getDestinationImage } from '@/lib/images';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Tours & Activities - Book Experiences Worldwide 2025 | bookmethat',
@@ -32,18 +34,9 @@ export default function ActivitiesPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white">
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <nav className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">bookmethat</Link>
-          <div className="flex gap-6">
-            <Link href="/hotels" className="text-gray-600 hover:text-gray-900 transition">Hotels</Link>
-            <Link href="/flights" className="text-gray-600 hover:text-gray-900 transition">Flights</Link>
-            <Link href="/cars" className="text-gray-600 hover:text-gray-900 transition">Cars</Link>
-            <Link href="/activities" className="text-blue-600 font-semibold">Activities</Link>
-          </div>
-        </nav>
-      </header>
+    <>
+      <Header />
+      <main className="min-h-screen bg-white">
 
       <section className="relative h-[600px] bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-30">
@@ -126,5 +119,7 @@ export default function ActivitiesPage() {
         </div>
       </footer>
     </main>
+      <Footer />
+    </>
   );
 }

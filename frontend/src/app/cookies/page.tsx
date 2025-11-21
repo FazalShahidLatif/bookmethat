@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import { Metadata } from 'next';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Cookie Policy - How We Use Cookies | bookmethat',
@@ -9,17 +11,9 @@ export const metadata: Metadata = {
 
 export default function CookiesPage() {
   return (
-    <main className="min-h-screen bg-white">
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <nav className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">bookmethat</Link>
-          <div className="flex gap-6">
-            <Link href="/" className="text-gray-600 hover:text-gray-900 transition">Home</Link>
-            <Link href="/privacy" className="text-gray-600 hover:text-gray-900 transition">Privacy</Link>
-            <Link href="/contact" className="text-gray-600 hover:text-gray-900 transition">Contact</Link>
-          </div>
-        </nav>
-      </header>
+    <>
+      <Header />
+      <main className="min-h-screen bg-white">
 
       <div className="max-w-4xl mx-auto px-4 py-16">
         <h1 className="text-4xl font-bold mb-8">Cookie Policy</h1>
@@ -267,5 +261,7 @@ export default function CookiesPage() {
         </div>
       </footer>
     </main>
+      <Footer />
+    </>
   );
 }

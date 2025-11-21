@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import OptimizedImage from '@/components/OptimizedImage';
 import { getDestinationImage } from '@/lib/images';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Book Cheap Flights - Compare Airlines & Find Best Deals 2025 | bookmethat',
@@ -25,19 +27,9 @@ export default function FlightsPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <nav className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">bookmethat</Link>
-          <div className="flex gap-6">
-            <Link href="/hotels" className="text-gray-600 hover:text-gray-900 transition">Hotels</Link>
-            <Link href="/flights" className="text-blue-600 font-semibold">Flights</Link>
-            <Link href="/cars" className="text-gray-600 hover:text-gray-900 transition">Cars</Link>
-            <Link href="/activities" className="text-gray-600 hover:text-gray-900 transition">Activities</Link>
-          </div>
-        </nav>
-      </header>
+    <>
+      <Header />
+      <main className="min-h-screen bg-white">
 
       {/* Hero with Search */}
       <section className="relative h-[600px] bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden">
@@ -192,5 +184,8 @@ export default function FlightsPage() {
         </div>
       </footer>
     </main>
+      <Footer />
+    </>
   );
 }
+
