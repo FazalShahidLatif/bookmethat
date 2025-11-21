@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import OptimizedImage from '@/components/OptimizedImage';
 import { getDestinationImage } from '@/lib/images';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Careers at bookmethat - Join Our Travel Tech Team | Remote Jobs 2025',
@@ -157,13 +159,15 @@ export default function CareersPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <nav className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">
-            bookmethat
-          </Link>
+    <>
+      <Header />
+      <main className="min-h-screen bg-white">
+        {/* Hero Section */}
+        <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 px-4">
+          <div className="max-w-6xl mx-auto">
+            <Link href="/" className="text-sm text-blue-100 hover:text-white mb-4 inline-block">
+              ← Back to Home
+            </Link>
           <div className="flex gap-6">
             <Link href="/" className="text-gray-600 hover:text-gray-900 transition">Home</Link>
             <Link href="/about" className="text-gray-600 hover:text-gray-900 transition">About</Link>
@@ -457,5 +461,5 @@ export default function CareersPage() {
         </div>
       </footer>
     </main>
-  );
-}
+    <Footer />
+    </>\n  );\n}
