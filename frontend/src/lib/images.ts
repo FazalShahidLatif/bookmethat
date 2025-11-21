@@ -178,7 +178,15 @@ class ImageService {
   getDestinationImageUrl(destination: string): string {
     const defaults = this.getDefaultImages();
     const key = destination.toLowerCase().replace(/\s+/g, '-');
-    return defaults[key] || `https://source.unsplash.com/1600x900/?${encodeURIComponent(destination)},travel`;
+    const baseUrl = defaults[key];
+    
+    if (baseUrl) {
+      // Add optimization parameters to Unsplash URLs
+      return `${baseUrl}?w=1600&h=900&fit=crop&q=80&auto=format`;
+    }
+    
+    // Fallback to Unsplash source
+    return `https://source.unsplash.com/1600x900/?${encodeURIComponent(destination)},travel`;
   }
 }
 
