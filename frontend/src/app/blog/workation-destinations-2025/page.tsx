@@ -48,6 +48,11 @@ export default function WorkationGuidePage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Social Share Buttons */}
+        <div className="mb-8 pb-8 border-b border-gray-200">
+          <SocialShareButtons url={pageUrl} title={pageTitle} />
+        </div>
+
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             The rise of remote work has transformed how we think about travel. No longer bound to traditional office spaces, millions of professionals are embracing "workations"—extended trips that blend productivity with exploration. But with so many destinations vying for attention, how do you choose the right place to set up your temporary office? This comprehensive guide breaks down the top workation destinations for 2025, considering factors like internet speed, cost of living, time zones, and quality of life.
