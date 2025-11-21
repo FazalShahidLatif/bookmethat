@@ -1,3 +1,6 @@
+import OptimizedImage from '@/components/OptimizedImage';
+import { getDestinationImage } from '@/lib/images';
+
 export default function HomePage() {
   // JSON-LD Schema for Organization
   const organizationSchema = {
@@ -115,13 +118,27 @@ export default function HomePage() {
       />
       
       <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 px-4">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4">
+      {/* Hero Section with Background Image */}
+      <section className="relative text-white py-20 px-4 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <OptimizedImage
+            src={getDestinationImage('dubai')}
+            alt="Travel destinations worldwide"
+            fill={true}
+            objectFit="cover"
+            priority={true}
+            sizes="100vw"
+            quality={90}
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-indigo-900/80" />
+        </div>
+        
+        <div className="max-w-6xl mx-auto relative z-10">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">
             Find your next adventure
           </h1>
-          <p className="text-xl md:text-2xl mb-8 text-blue-100">
+          <p className="text-xl md:text-2xl mb-8 text-blue-100 drop-shadow-md">
             Search hotels, flights, car rentals, and more
           </p>
           
@@ -158,6 +175,42 @@ export default function HomePage() {
               </button>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Popular Destinations */}
+      <section className="max-w-6xl mx-auto py-16 px-4">
+        <h2 className="text-3xl font-bold text-gray-900 mb-8">
+          Popular Destinations
+        </h2>
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          {[
+            { name: 'Bali', slug: 'bali', desc: 'Tropical paradise' },
+            { name: 'Paris', slug: 'paris', desc: 'City of lights' },
+            { name: 'Tokyo', slug: 'tokyo', desc: 'Modern metropolis' },
+          ].map((dest) => (
+            <a 
+              key={dest.slug}
+              href={`/destinations/${dest.slug}`} 
+              className="group relative h-64 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition"
+            >
+              <OptimizedImage
+                src={getDestinationImage(dest.slug)}
+                alt={`${dest.name} destination`}
+                fill={true}
+                objectFit="cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-white group-hover:text-blue-300 transition">
+                    {dest.name}
+                  </h3>
+                  <p className="text-gray-200 text-sm">{dest.desc}</p>
+                </div>
+              </div>
+            </a>
+          ))}
         </div>
       </section>
 
