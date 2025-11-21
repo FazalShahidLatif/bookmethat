@@ -212,6 +212,8 @@ export default function FamilyVacationDestinationsPage() {
         </div>
       </div>
     </article>
+    <Footer />
+    </>
   );
 }
 

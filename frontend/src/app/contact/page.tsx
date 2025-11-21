@@ -4,7 +4,7 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'Contact Us - bookmethat | 24/7 Customer Support',
-  description: 'Get in touch with bookmethat support team. We're here 24/7 to help with bookings, cancellations, and travel questions.',
+  description: 'Get in touch with bookmethat support team. We are here 24/7 to help with bookings, cancellations, and travel questions.',
   keywords: 'contact bookmethat, customer support, travel help, booking assistance',
 };
 

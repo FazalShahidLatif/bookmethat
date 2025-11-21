@@ -151,7 +151,7 @@ export default function BlogPage() {
               Expert tips, destination guides, and travel inspiration
             </p>
           </div>
-        </header>
+        </section>
 
         {/* Categories */}
         <section className="border-b bg-white sticky top-0 z-10 shadow-sm">

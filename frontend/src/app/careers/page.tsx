@@ -163,22 +163,7 @@ export default function CareersPage() {
       <Header />
       <main className="min-h-screen bg-white">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 px-4">
-          <div className="max-w-6xl mx-auto">
-            <Link href="/" className="text-sm text-blue-100 hover:text-white mb-4 inline-block">
-              ← Back to Home
-            </Link>
-          <div className="flex gap-6">
-            <Link href="/" className="text-gray-600 hover:text-gray-900 transition">Home</Link>
-            <Link href="/about" className="text-gray-600 hover:text-gray-900 transition">About</Link>
-            <Link href="/blog" className="text-gray-600 hover:text-gray-900 transition">Blog</Link>
-            <Link href="/contact" className="text-gray-600 hover:text-gray-900 transition">Contact</Link>
-          </div>
-        </nav>
-      </header>
-
-      {/* Hero Section */}
-      <section className="relative h-[500px] bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden">
+        <section className="relative h-[500px] bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <OptimizedImage
             src={getDestinationImage('technology')}
@@ -462,4 +447,6 @@ export default function CareersPage() {
       </footer>
     </main>
     <Footer />
-    </>\n  );\n}
+    </>
+  );
+}

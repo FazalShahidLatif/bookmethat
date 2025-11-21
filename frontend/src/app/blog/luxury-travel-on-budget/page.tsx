@@ -289,6 +289,8 @@ export default function LuxuryTravelBudgetPage() {
         </div>
       </div>
     </article>
+    <Footer />
+    </>
   );
 }
 

@@ -270,6 +270,8 @@ export default function LastMinuteBookingPage() {
         </div>
       </div>
     </article>
+    <Footer />
+    </>
   );
 }
 

@@ -215,6 +215,8 @@ export default function HiddenGemsPage() {
         </div>
       </div>
     </article>
+    <Footer />
+    </>
   );
 }
 

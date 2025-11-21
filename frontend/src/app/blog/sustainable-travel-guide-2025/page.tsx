@@ -210,6 +210,8 @@ export default function SustainableTravelPage() {
         </div>
       </div>
     </article>
+    <Footer />
+    </>
   );
 }
 

@@ -255,6 +255,8 @@ export default function DigitalNomadPackingPage() {
         </div>
       </div>
     </article>
+    <Footer />
+    </>
   );
 }
 

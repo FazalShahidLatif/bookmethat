@@ -271,6 +271,8 @@ export default function SoloTravelSafetyPage() {
         </div>
       </div>
     </article>
+    <Footer />
+    </>
   );
 }
 

@@ -297,6 +297,8 @@ export default function TravelPlanningChecklistPage() {
         </div>
       </div>
     </article>
+    <Footer />
+    </>
   );
 }
 
