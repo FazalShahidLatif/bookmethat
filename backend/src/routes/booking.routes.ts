@@ -12,25 +12,9 @@ import { z } from 'zod';
 import { authenticateToken } from './auth.routes';
 import { bookingService } from '../services/mock/booking.service';
 import { stripeService } from '../services/mock/stripe.service';
+import { prisma } from '../lib/prisma';
 
 const router = Router();
-
-// In-memory bookings storage (will use Prisma once DB is set up)
-interface Booking {
-  id: string;
-  userId: string;
-  type: 'HOTEL' | 'FLIGHT' | 'CAR' | 'ACTIVITY';
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED';
-  totalPrice: number;
-  currency: string;
-  paymentId?: string;
-  isMock: boolean;
-  bookingData: any;
-  createdAt: string;
-  updatedAt: string;
-}
-
-const bookings: Booking[] = [];
 
 // Validation schemas
 const createBookingSchema = z.object({
@@ -107,22 +91,19 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
       },
     });
     
-    // Create booking
-    const booking: Booking = {
-      id: `booking_${Date.now()}`,
-      userId,
-      type: data.type,
-      status: 'CONFIRMED',
-      totalPrice: data.totalPrice,
-      currency: data.currency,
-      paymentId: paymentIntent.id,
-      isMock: true,
-      bookingData: data.bookingData,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    
-    bookings.push(booking);
+    // Create booking in database
+    const booking = await prisma.booking.create({
+      data: {
+        userId,
+        type: data.type,
+        status: 'CONFIRMED',
+        totalPrice: data.totalPrice,
+        currency: data.currency,
+        paymentId: paymentIntent.id,
+        isMock: true,
+        bookingData: data.bookingData,
+      },
+    });
     
     res.status(201).json({
       success: true,
@@ -158,7 +139,7 @@ router.post('/', authenticateToken, async (req: Request, res: Response) => {
  * GET /api/v1/bookings
  * List user's bookings with pagination
  */
-router.get('/', authenticateToken, (req: Request, res: Response) => {
+router.get('/', authenticateToken, async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;
     const page = parseInt(req.query.page as string) || 1;
@@ -166,36 +147,31 @@ router.get('/', authenticateToken, (req: Request, res: Response) => {
     const status = req.query.status as string;
     const type = req.query.type as string;
     
-    // Filter bookings by user
-    let userBookings = bookings.filter(b => b.userId === userId);
+    // Build where clause
+    const where: any = { userId };
+    if (status) where.status = status;
+    if (type) where.type = type;
     
-    // Apply filters
-    if (status) {
-      userBookings = userBookings.filter(b => b.status === status);
-    }
-    if (type) {
-      userBookings = userBookings.filter(b => b.type === type);
-    }
+    // Get total count
+    const total = await prisma.booking.count({ where });
     
-    // Sort by creation date (newest first)
-    userBookings.sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-    
-    // Pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedBookings = userBookings.slice(startIndex, endIndex);
+    // Get paginated bookings
+    const userBookings = await prisma.booking.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
     
     res.json({
       success: true,
       data: {
-        bookings: paginatedBookings,
+        bookings: userBookings,
         pagination: {
           page,
           limit,
-          total: userBookings.length,
-          totalPages: Math.ceil(userBookings.length / limit),
+          total,
+          totalPages: Math.ceil(total / limit),
         },
       },
     });
@@ -217,7 +193,12 @@ router.get('/:id', authenticateToken, async (req: Request, res: Response) => {
     const userId = (req as any).user.userId;
     const { id } = req.params;
     
-    const booking = bookings.find(b => b.id === id && b.userId === userId);
+    const booking = await prisma.booking.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    });
     
     if (!booking) {
       return res.status(404).json({
@@ -258,7 +239,12 @@ router.put('/:id/cancel', authenticateToken, async (req: Request, res: Response)
     const { id } = req.params;
     const { reason } = req.body;
     
-    const booking = bookings.find(b => b.id === id && b.userId === userId);
+    const booking = await prisma.booking.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    });
     
     if (!booking) {
       return res.status(404).json({
@@ -291,14 +277,18 @@ router.put('/:id/cancel', authenticateToken, async (req: Request, res: Response)
       });
     }
     
-    // Update booking status
-    booking.status = 'CANCELLED';
-    booking.updatedAt = new Date().toISOString();
+    // Update booking status in database
+    const updatedBooking = await prisma.booking.update({
+      where: { id },
+      data: {
+        status: 'CANCELLED',
+      },
+    });
     
     res.json({
       success: true,
       data: {
-        booking,
+        booking: updatedBooking,
         refund,
       },
       message: 'Booking cancelled successfully',
@@ -316,12 +306,17 @@ router.put('/:id/cancel', authenticateToken, async (req: Request, res: Response)
  * GET /api/v1/bookings/:id/receipt
  * Get booking receipt/invoice
  */
-router.get('/:id/receipt', authenticateToken, (req: Request, res: Response) => {
+router.get('/:id/receipt', authenticateToken, async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;
     const { id } = req.params;
     
-    const booking = bookings.find(b => b.id === id && b.userId === userId);
+    const booking = await prisma.booking.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    });
     
     if (!booking) {
       return res.status(404).json({

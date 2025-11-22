@@ -11,11 +11,9 @@ import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
+import { prisma } from '../lib/prisma';
 
 const router = Router();
-
-// In-memory user storage (replace with Prisma once DB is set up)
-const users: any[] = [];
 
 // Validation schemas
 const registerSchema = z.object({
@@ -45,7 +43,9 @@ router.post('/register', async (req: Request, res: Response) => {
     const data = registerSchema.parse(req.body);
 
     // Check if user already exists
-    const existingUser = users.find((u) => u.email === data.email);
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
     if (existingUser) {
       return res.status(400).json({
         success: false,
@@ -57,21 +57,19 @@ router.post('/register', async (req: Request, res: Response) => {
     const bcryptRounds = parseInt(process.env.BCRYPT_ROUNDS || '10');
     const hashedPassword = await bcrypt.hash(data.password, bcryptRounds);
 
-    // Create user (mock - will use Prisma once DB is ready)
-    const user = {
-      id: `user_${Date.now()}`,
-      email: data.email,
-      password: hashedPassword,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      phone: data.phone || null,
-      emailVerified: false,
-      loyaltyPoints: 0,
-      loyaltyTier: 'basic',
-      createdAt: new Date().toISOString(),
-    };
-
-    users.push(user);
+    // Create user in database
+    const user = await prisma.user.create({
+      data: {
+        email: data.email,
+        password: hashedPassword,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phone: data.phone || null,
+        emailVerified: false,
+        loyaltyPoints: 0,
+        loyaltyTier: 'BASIC',
+      },
+    });
 
     // Generate JWT token
     const token = jwt.sign(
@@ -118,7 +116,9 @@ router.post('/login', async (req: Request, res: Response) => {
     const data = loginSchema.parse(req.body);
 
     // Find user
-    const user = users.find((u) => u.email === data.email);
+    const user = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -187,10 +187,12 @@ router.post('/logout', (req: Request, res: Response) => {
  * GET /api/auth/me
  * Get current user profile (requires authentication)
  */
-router.get('/me', authenticateToken, (req: Request, res: Response) => {
+router.get('/me', authenticateToken, async (req: Request, res: Response) => {
   const userId = (req as any).user.userId;
 
-  const user = users.find((u) => u.id === userId);
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
   if (!user) {
     return res.status(404).json({
       success: false,
