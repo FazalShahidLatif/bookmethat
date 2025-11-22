@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import emailRoutes from './routes/email';
 import authRoutes from './routes/auth.routes';
+import bookingRoutes from './routes/booking.routes';
+import esimRoutes from './routes/esim.routes';
 import {
   helmetConfig,
   generalRateLimit,
@@ -48,12 +50,14 @@ app.get('/api/v1/properties', (req, res) => {
   res.json({ message: 'Properties endpoint - coming soon' });
 });
 
-app.get('/api/v1/esims', (req, res) => {
-  res.json({ message: 'eSIM endpoint - coming soon' });
-});
-
 // Authentication routes with strict rate limiting (now using real implementation)
 app.use('/api/v1/auth', authRateLimit, authRoutes);
+
+// Booking routes with rate limiting
+app.use('/api/v1/bookings', bookingRateLimit, bookingRoutes);
+
+// eSIM routes with rate limiting
+app.use('/api/v1/esim', bookingRateLimit, esimRoutes);
 
 // Legacy endpoints for backward compatibility
 app.post('/api/v1/auth/login', authRateLimit, (req, res) => {
@@ -68,14 +72,8 @@ app.post('/api/v1/auth/password-reset', passwordResetRateLimit, (req, res) => {
   res.json({ message: 'Password reset endpoint - coming soon' });
 });
 
-// Booking routes with rate limiting
-app.post('/api/v1/bookings', bookingRateLimit, (req, res) => {
-  res.json({ message: 'Create booking endpoint - coming soon' });
-});
-
-app.get('/api/v1/bookings/:id', (req, res) => {
-  res.json({ message: 'Get booking endpoint - coming soon' });
-});
+// Booking routes - now using real implementation (moved above)
+// Old placeholder routes removed
 
 // Email routes
 app.use('/api/v1/email', emailRoutes);
@@ -116,4 +114,13 @@ app.listen(PORT, () => {
   console.log(`   POST /api/v1/auth/login - Login`);
   console.log(`   GET  /api/v1/auth/me - Get current user (requires auth)`);
   console.log(`   POST /api/v1/auth/logout - Logout`);
+  console.log(`   POST /api/v1/bookings - Create booking`);
+  console.log(`   GET  /api/v1/bookings - List bookings`);
+  console.log(`   GET  /api/v1/bookings/:id - Get booking details`);
+  console.log(`   PUT  /api/v1/bookings/:id/cancel - Cancel booking`);
+  console.log(`   GET  /api/v1/bookings/:id/receipt - Get receipt`);
+  console.log(`   GET  /api/v1/esim/plans - List eSIM plans`);
+  console.log(`   POST /api/v1/esim/purchase - Purchase eSIM`);
+  console.log(`   GET  /api/v1/esim - List user's eSIMs`);
+  console.log(`   GET  /api/v1/esim/:id - Get eSIM with QR code`);
 });
