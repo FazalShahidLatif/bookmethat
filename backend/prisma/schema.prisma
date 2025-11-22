@@ -1,0 +1,529 @@
+// BookMeThat Database Schema
+// This schema is designed to work with mock data initially
+// and can seamlessly transition to real API integrations
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// USER MANAGEMENT
+// ============================================
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password      String   // bcrypt hashed
+  firstName     String
+  lastName      String
+  phone         String?
+  dateOfBirth   DateTime?
+  
+  // Profile
+  avatar        String?
+  bio           String?
+  nationality   String?
+  passportNumber String?
+  
+  // Preferences
+  currency      String   @default("USD")
+  language      String   @default("en")
+  newsletter    Boolean  @default(true)
+  
+  // Loyalty
+  points        Int      @default(0)
+  tier          String   @default("basic") // basic, silver, gold, platinum
+  
+  // Status
+  emailVerified Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  lastLogin     DateTime?
+  
+  // Relations
+  bookings      Booking[]
+  reviews       Review[]
+  favorites     Favorite[]
+  payments      Payment[]
+  esims         EsimOrder[]
+  
+  @@index([email])
+  @@index([createdAt])
+  @@map("users")
+}
+
+// ============================================
+// BOOKINGS - Main booking entity
+// ============================================
+
+model Booking {
+  id              String   @id @default(uuid())
+  userId          String
+  bookingNumber   String   @unique // BK-XXXXXXXX format
+  
+  // Type of booking
+  type            BookingType // HOTEL, FLIGHT, CAR, ACTIVITY, PACKAGE
+  status          BookingStatus @default(PENDING)
+  
+  // Common fields
+  totalPrice      Float
+  currency        String   @default("USD")
+  
+  // Guest details
+  guestName       String
+  guestEmail      String
+  guestPhone      String
+  
+  // Special requests
+  specialRequests String?
+  
+  // Payment
+  paymentStatus   PaymentStatus @default(PENDING)
+  paidAmount      Float    @default(0)
+  
+  // Metadata (stores type-specific data as JSON)
+  metadata        Json? // Flexible storage for different booking types
+  
+  // Mock flag
+  isMock          Boolean  @default(true) // true = using mock data, false = real API
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  confirmedAt     DateTime?
+  cancelledAt     DateTime?
+  
+  // Relations
+  user            User     @relation(fields: [userId], references: [id])
+  payment         Payment?
+  hotelBooking    HotelBooking?
+  flightBooking   FlightBooking?
+  carBooking      CarBooking?
+  activityBooking ActivityBooking?
+  
+  @@index([userId])
+  @@index([bookingNumber])
+  @@index([status])
+  @@index([createdAt])
+  @@map("bookings")
+}
+
+// ============================================
+// HOTEL BOOKINGS
+// ============================================
+
+model HotelBooking {
+  id          String   @id @default(uuid())
+  bookingId   String   @unique
+  
+  // Property details
+  propertyId  String   // External API ID or mock ID
+  propertyName String
+  address     String
+  city        String
+  country     String
+  
+  // Room details
+  roomType    String
+  roomCount   Int
+  
+  // Dates
+  checkIn     DateTime
+  checkOut    DateTime
+  nights      Int
+  
+  // Guests
+  adults      Int
+  children    Int      @default(0)
+  
+  // Amenities
+  amenities   String[] // Breakfast, WiFi, Parking, etc.
+  
+  // Images
+  images      String[] // URLs to property images
+  
+  // Cancellation
+  cancellationPolicy String?
+  refundable  Boolean  @default(true)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  booking     Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@index([checkIn])
+  @@index([city])
+  @@map("hotel_bookings")
+}
+
+// ============================================
+// FLIGHT BOOKINGS
+// ============================================
+
+model FlightBooking {
+  id            String   @id @default(uuid())
+  bookingId     String   @unique
+  
+  // Flight details
+  flightNumber  String
+  airline       String
+  airlineCode   String
+  
+  // Route
+  origin        String   // Airport code (LAX)
+  destination   String   // Airport code (JFK)
+  originCity    String
+  destinationCity String
+  
+  // Schedule
+  departureDate DateTime
+  arrivalDate   DateTime
+  departureTime String
+  arrivalTime   String
+  duration      Int      // minutes
+  
+  // Passengers
+  passengers    Json     // Array of passenger details
+  
+  // Cabin & Baggage
+  cabinClass    String   // Economy, Business, First
+  baggage       String   // "1 checked bag, 1 carry-on"
+  
+  // Stops
+  stops         Int      @default(0)
+  layovers      Json?    // Array of layover details
+  
+  // PNR
+  pnr           String?  // Passenger Name Record
+  eTicket       String?
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@index([departureDate])
+  @@index([origin, destination])
+  @@map("flight_bookings")
+}
+
+// ============================================
+// CAR RENTALS
+// ============================================
+
+model CarBooking {
+  id            String   @id @default(uuid())
+  bookingId     String   @unique
+  
+  // Car details
+  carId         String   // External API ID or mock ID
+  carName       String
+  carType       String   // Economy, SUV, Luxury, etc.
+  brand         String
+  model         String
+  year          Int?
+  
+  // Specifications
+  transmission  String   // Automatic, Manual
+  fuelType      String   // Petrol, Diesel, Electric, Hybrid
+  seats         Int
+  doors         Int
+  luggage       Int
+  
+  // Features
+  features      String[] // AC, GPS, Bluetooth, etc.
+  
+  // Pickup & Dropoff
+  pickupLocation String
+  dropoffLocation String
+  pickupDate    DateTime
+  dropoffDate   DateTime
+  rentalDays    Int
+  
+  // Insurance & Extras
+  insurance     String?
+  extras        Json?    // GPS, Child seat, Additional driver
+  
+  // Mileage
+  mileage       String   // "Unlimited" or "200 km/day"
+  
+  // Provider
+  provider      String   // Hertz, Avis, Budget, etc.
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@index([pickupDate])
+  @@index([pickupLocation])
+  @@map("car_bookings")
+}
+
+// ============================================
+// ACTIVITY BOOKINGS
+// ============================================
+
+model ActivityBooking {
+  id            String   @id @default(uuid())
+  bookingId     String   @unique
+  
+  // Activity details
+  activityId    String   // External API ID or mock ID
+  activityTitle String
+  description   String?
+  category      String   // Tour, Museum, Adventure, etc.
+  
+  // Location
+  city          String
+  country       String
+  meetingPoint  String?
+  
+  // Schedule
+  activityDate  DateTime
+  startTime     String
+  duration      String   // "3 hours", "Full day"
+  
+  // Participants
+  adults        Int
+  children      Int      @default(0)
+  
+  // Inclusions
+  included      String[] // Guide, Lunch, Transport, etc.
+  notIncluded   String[]
+  
+  // Options
+  selectedOption String? // Standard, Premium, VIP
+  
+  // Confirmation
+  voucherUrl    String?
+  confirmationCode String?
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  booking       Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  
+  @@index([activityDate])
+  @@index([city])
+  @@map("activity_bookings")
+}
+
+// ============================================
+// ESIM ORDERS
+// ============================================
+
+model EsimOrder {
+  id            String   @id @default(uuid())
+  userId        String
+  orderNumber   String   @unique // ESIM-XXXXXXXX
+  
+  // Plan details
+  planId        String   // Airalo plan ID or mock ID
+  planName      String
+  country       String
+  region        String?  // Europe, Asia, Global, etc.
+  
+  // Data & Validity
+  dataAmount    String   // "5GB", "Unlimited"
+  validityDays  Int      // 7, 15, 30 days
+  
+  // Pricing
+  price         Float
+  currency      String   @default("USD")
+  
+  // Status
+  status        EsimStatus @default(PENDING)
+  
+  // Activation
+  iccid         String?  // SIM card identifier
+  qrCode        String?  // Base64 or URL to QR code image
+  activationCode String?
+  
+  // Usage
+  dataUsed      Float?   @default(0) // GB used
+  expiresAt     DateTime?
+  activatedAt   DateTime?
+  
+  // Mock flag
+  isMock        Boolean  @default(true)
+  
+  // Timestamps
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  user          User     @relation(fields: [userId], references: [id])
+  payment       Payment?
+  
+  @@index([userId])
+  @@index([orderNumber])
+  @@index([status])
+  @@map("esim_orders")
+}
+
+// ============================================
+// PAYMENTS
+// ============================================
+
+model Payment {
+  id              String   @id @default(uuid())
+  userId          String
+  
+  // Associated booking or order
+  bookingId       String?  @unique
+  esimOrderId     String?  @unique
+  
+  // Payment details
+  amount          Float
+  currency        String   @default("USD")
+  status          PaymentStatus @default(PENDING)
+  method          String   // card, paypal, bank_transfer
+  
+  // Stripe/Payment Gateway
+  gatewayId       String?  // Stripe payment intent ID
+  gatewayResponse Json?    // Full response from payment gateway
+  
+  // Card details (last 4 digits only)
+  cardLast4       String?
+  cardBrand       String?  // Visa, Mastercard, Amex
+  
+  // Refunds
+  refundAmount    Float?   @default(0)
+  refundedAt      DateTime?
+  refundReason    String?
+  
+  // Mock flag
+  isMock          Boolean  @default(true)
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  paidAt          DateTime?
+  
+  // Relations
+  user            User     @relation(fields: [userId], references: [id])
+  booking         Booking? @relation(fields: [bookingId], references: [id])
+  esimOrder       EsimOrder? @relation(fields: [esimOrderId], references: [id])
+  
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("payments")
+}
+
+// ============================================
+// REVIEWS & RATINGS
+// ============================================
+
+model Review {
+  id          String   @id @default(uuid())
+  userId      String
+  
+  // What's being reviewed
+  entityType  String   // HOTEL, FLIGHT, CAR, ACTIVITY
+  entityId    String   // The booking ID or external ID
+  
+  // Rating
+  rating      Int      // 1-5 stars
+  title       String?
+  comment     String
+  
+  // Helpful votes
+  helpfulCount Int     @default(0)
+  
+  // Moderation
+  isVerified  Boolean  @default(false)
+  isPublished Boolean  @default(true)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id])
+  
+  @@index([entityType, entityId])
+  @@index([rating])
+  @@map("reviews")
+}
+
+// ============================================
+// FAVORITES / WISHLISTS
+// ============================================
+
+model Favorite {
+  id          String   @id @default(uuid())
+  userId      String
+  
+  // What's favorited
+  entityType  String   // HOTEL, DESTINATION, ACTIVITY
+  entityId    String   // External ID or slug
+  entityName  String
+  entityImage String?
+  
+  // Metadata
+  metadata    Json?    // Store additional details
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  user        User     @relation(fields: [userId], references: [id])
+  
+  @@unique([userId, entityType, entityId])
+  @@index([userId])
+  @@map("favorites")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum BookingType {
+  HOTEL
+  FLIGHT
+  CAR
+  ACTIVITY
+  PACKAGE
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+}
+
+enum EsimStatus {
+  PENDING
+  ACTIVE
+  EXPIRED
+  CANCELLED
+}
