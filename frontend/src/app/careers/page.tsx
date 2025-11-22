@@ -169,7 +169,7 @@ export default function CareersPage() {
             src={getDestinationImage('technology')}
             alt="Team working together at bookmethat"
             fill
-            style={{ objectFit: 'cover' }}
+            objectFit="cover"
             priority
           />
         </div>

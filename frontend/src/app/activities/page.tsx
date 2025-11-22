@@ -44,7 +44,7 @@ export default function ActivitiesPage() {
             src={getDestinationImage('adventure')}
             alt="Activities and tours"
             fill
-            style={{ objectFit: 'cover' }}
+            objectFit="cover"
             priority
           />
         </div>
@@ -89,7 +89,7 @@ export default function ActivitiesPage() {
                     src={getDestinationImage(activity.image)}
                     alt={activity.name}
                     fill
-                    style={{ objectFit: 'cover' }}
+                    objectFit="cover"
                   />
                 </div>
                 <div className="p-4">

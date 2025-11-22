@@ -44,7 +44,7 @@ export default function CarsPage() {
             src={getDestinationImage('adventure')}
             alt="Car rental"
             fill
-            style={{ objectFit: 'cover' }}
+            objectFit="cover"
             priority
           />
         </div>
@@ -109,7 +109,7 @@ export default function CarsPage() {
                     src={getDestinationImage(loc.image)}
                     alt={`Car rentals in ${loc.city}`}
                     fill
-                    style={{ objectFit: 'cover' }}
+                    objectFit="cover"
                   />
                 </div>
                 <div className="p-4">

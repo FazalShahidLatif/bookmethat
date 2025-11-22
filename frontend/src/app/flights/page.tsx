@@ -38,7 +38,7 @@ export default function FlightsPage() {
             src={getDestinationImage('airport')}
             alt="Airport terminal"
             fill
-            style={{ objectFit: 'cover' }}
+            objectFit="cover"
             priority
           />
         </div>
@@ -128,7 +128,7 @@ export default function FlightsPage() {
                     src={getDestinationImage(route.image)}
                     alt={`Flights to ${route.to}`}
                     fill
-                    style={{ objectFit: 'cover' }}
+                    objectFit="cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
