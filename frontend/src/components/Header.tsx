@@ -23,7 +23,7 @@ export default function Header({ variant = 'light', transparent = false }: Heade
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-2xl font-bold text-blue-600 hover:text-blue-700 transition">
-            bookmethat
+            BookMeThat
           </Link>
 
           {/* Desktop Navigation */}

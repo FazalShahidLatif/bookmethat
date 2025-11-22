@@ -243,78 +243,162 @@ export default function HomePage() {
       <section className="max-w-7xl mx-auto py-20 px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Top Destinations
+            Domestic & International Destinations
           </h2>
           <p className="text-xl text-gray-600">
-            Explore the world's most beautiful places
+            Explore Pakistan and the world's most beautiful places
           </p>
         </div>
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
-          <Link href="/destinations/bali" className="group relative h-96 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+        
+        {/* Domestic Destinations - Pakistan */}
+        <div className="mb-12">
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <span className="text-3xl">🇵🇰</span>
+            Discover Pakistan
+          </h3>
+          <div className="grid md:grid-cols-3 gap-8">
+            <Link href="/destinations/hunza" className="group relative h-80 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+              <OptimizedImage
+                src="https://images.pexels.com/photos/17007430/pexels-photo-17007430.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                alt="Hunza Valley, Pakistan - Mountain paradise"
+                fill={true}
+                objectFit="cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-6">
+                <h4 className="text-2xl font-bold text-white group-hover:text-blue-300 transition mb-2">
+                  Hunza Valley
+                </h4>
+                <p className="text-gray-200 mb-2">Mountain paradise with cherry blossoms</p>
+                <div className="flex items-center gap-3 text-xs text-gray-300">
+                  <span>⛰️ Mountains</span>
+                  <span>🌸 Nature</span>
+                  <span>🏰 Forts</span>
+                </div>
+              </div>
+            </Link>
+            
+            <Link href="/destinations/islamabad" className="group relative h-80 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+              <OptimizedImage
+                src="https://images.pexels.com/photos/12565158/pexels-photo-12565158.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                alt="Islamabad, Pakistan - Modern capital city"
+                fill={true}
+                objectFit="cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-6">
+                <h4 className="text-2xl font-bold text-white group-hover:text-blue-300 transition mb-2">
+                  Islamabad
+                </h4>
+                <p className="text-gray-200 mb-2">Modern capital with scenic hills</p>
+                <div className="flex items-center gap-3 text-xs text-gray-300">
+                  <span>🏙️ City</span>
+                  <span>🕌 Mosques</span>
+                  <span>🌳 Parks</span>
+                </div>
+              </div>
+            </Link>
+            
+            <Link href="/destinations/lahore" className="group relative h-80 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+              <OptimizedImage
+                src="https://images.pexels.com/photos/16997396/pexels-photo-16997396.jpeg?auto=compress&cs=tinysrgb&w=1200"
+                alt="Lahore, Pakistan - Cultural heart of Pakistan"
+                fill={true}
+                objectFit="cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-6">
+                <h4 className="text-2xl font-bold text-white group-hover:text-blue-300 transition mb-2">
+                  Lahore
+                </h4>
+                <p className="text-gray-200 mb-2">Cultural heart with Mughal architecture</p>
+                <div className="flex items-center gap-3 text-xs text-gray-300">
+                  <span>🏛️ Heritage</span>
+                  <span>🍛 Food</span>
+                  <span>🎭 Culture</span>
+                </div>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* International Destinations */}
+        <div>
+          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <span className="text-3xl">🌍</span>
+            International Getaways
+          </h3>
+          <div className="grid md:grid-cols-3 gap-8">
+            <Link href="/destinations/dubai" className="group relative h-80 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+              <OptimizedImage
+                src={getDestinationImage('dubai')}
+                alt="Dubai, UAE - Luxury and innovation"
+                fill={true}
+                objectFit="cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-6">
+                <h4 className="text-2xl font-bold text-white group-hover:text-blue-300 transition mb-2">
+                  Dubai, UAE
+                </h4>
+                <p className="text-gray-200 mb-2">Luxury shopping and modern architecture</p>
+                <div className="flex items-center gap-3 text-xs text-gray-300">
+                  <span>🏙️ Skyscrapers</span>
+                  <span>🛍️ Shopping</span>
+                  <span>🏖️ Beaches</span>
+                </div>
+              </div>
+            </Link>
+
+          
+          <Link href="/destinations/bali" className="group relative h-80 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <OptimizedImage
               src={getDestinationImage('bali')}
-              alt="Bali, Indonesia - Tropical paradise destination"
+              alt="Bali, Indonesia - Tropical paradise"
               fill={true}
               objectFit="cover"
               sizes="(max-width: 768px) 100vw, 33vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-            <div className="absolute inset-0 flex flex-col justify-end p-8">
-              <h3 className="text-3xl font-bold text-white group-hover:text-blue-300 transition mb-2">
+            <div className="absolute inset-0 flex flex-col justify-end p-6">
+              <h4 className="text-2xl font-bold text-white group-hover:text-blue-300 transition mb-2">
                 Bali, Indonesia
-              </h3>
-              <p className="text-gray-200 text-lg mb-3">Tropical paradise with stunning beaches</p>
-              <div className="flex items-center gap-4 text-sm text-gray-300">
+              </h4>
+              <p className="text-gray-200 mb-2">Tropical paradise with stunning beaches</p>
+              <div className="flex items-center gap-3 text-xs text-gray-300">
                 <span>🏖️ Beaches</span>
-                <span>🏛️ Culture</span>
-                <span>🌅 Sunsets</span>
+                <span>🏛️ Temples</span>
+                <span>🌅 Culture</span>
               </div>
             </div>
           </Link>
           
-          <Link href="/destinations/paris" className="group relative h-96 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-            <OptimizedImage
-              src={getDestinationImage('paris')}
-              alt="Paris, France - City of lights and romance"
-              fill={true}
-              objectFit="cover"
-              sizes="(max-width: 768px) 100vw, 33vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-            <div className="absolute inset-0 flex flex-col justify-end p-8">
-              <h3 className="text-3xl font-bold text-white group-hover:text-blue-300 transition mb-2">
-                Paris, France
-              </h3>
-              <p className="text-gray-200 text-lg mb-3">The city of lights and romance</p>
-              <div className="flex items-center gap-4 text-sm text-gray-300">
-                <span>🗼 Eiffel Tower</span>
-                <span>🎨 Art</span>
-                <span>🥐 Cuisine</span>
-              </div>
-            </div>
-          </Link>
-          
-          <Link href="/destinations/tokyo" className="group relative h-96 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+          <Link href="/destinations/tokyo" className="group relative h-80 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
             <OptimizedImage
               src={getDestinationImage('tokyo')}
-              alt="Tokyo, Japan - Modern metropolis with ancient temples"
+              alt="Tokyo, Japan - Modern metropolis"
               fill={true}
               objectFit="cover"
               sizes="(max-width: 768px) 100vw, 33vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-            <div className="absolute inset-0 flex flex-col justify-end p-8">
-              <h3 className="text-3xl font-bold text-white group-hover:text-blue-300 transition mb-2">
+            <div className="absolute inset-0 flex flex-col justify-end p-6">
+              <h4 className="text-2xl font-bold text-white group-hover:text-blue-300 transition mb-2">
                 Tokyo, Japan
-              </h3>
-              <p className="text-gray-200 text-lg mb-3">Where tradition meets innovation</p>
-              <div className="flex items-center gap-4 text-sm text-gray-300">
+              </h4>
+              <p className="text-gray-200 mb-2">Where tradition meets innovation</p>
+              <div className="flex items-center gap-3 text-xs text-gray-300">
                 <span>🏯 Temples</span>
                 <span>🍣 Food</span>
                 <span>🌸 Culture</span>
               </div>
             </div>
           </Link>
+        </div>
         </div>
         <div className="text-center">
           <Link href="/destinations" className="inline-block px-8 py-4 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition font-semibold text-lg">

@@ -1,33 +1,23 @@
-# robots.txt for bookmethat.com
+# bookmethat.com - Development Environment
+# 🚧 MVP UNDER DEVELOPMENT - DO NOT INDEX 🚧
+# This site is not ready for public search engine indexing
 
 User-agent: *
-Allow: /
-Disallow: /api/
-Disallow: /account/
-Disallow: /admin/
-Disallow: /_next/
-Disallow: /checkout/
+Disallow: /
 
-# High-value pages for crawling
-Allow: /hotels
-Allow: /flights
-Allow: /cars
-Allow: /activities
-Allow: /esim
-Allow: /deals
-Allow: /destinations
-
-# Sitemap location
-Sitemap: https://bookmethat.com/sitemap.xml
-Sitemap: https://bookmethat.com/sitemap-hotels.xml
-Sitemap: https://bookmethat.com/sitemap-destinations.xml
-
-# Crawl-delay for specific bots
+# Block all major search engines during development
 User-agent: Googlebot
-Crawl-delay: 0
+Disallow: /
 
 User-agent: Bingbot
-Crawl-delay: 0
+Disallow: /
+
+User-agent: Slurp
+Disallow: /
 
 User-agent: Yandex
-Crawl-delay: 1
+Disallow: /
+
+# NOTE: This robots.txt will be updated when site is production-ready
+# For now, preventing indexing to show "live proof" to API providers
+
