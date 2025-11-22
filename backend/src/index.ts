@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import emailRoutes from './routes/email';
+import authRoutes from './routes/auth.routes';
 import {
   helmetConfig,
   generalRateLimit,
@@ -51,13 +52,16 @@ app.get('/api/v1/esims', (req, res) => {
   res.json({ message: 'eSIM endpoint - coming soon' });
 });
 
-// Authentication routes with strict rate limiting
+// Authentication routes with strict rate limiting (now using real implementation)
+app.use('/api/v1/auth', authRateLimit, authRoutes);
+
+// Legacy endpoints for backward compatibility
 app.post('/api/v1/auth/login', authRateLimit, (req, res) => {
-  res.json({ message: 'Login endpoint - coming soon' });
+  res.status(301).json({ message: 'Use POST /api/v1/auth/login instead' });
 });
 
 app.post('/api/v1/auth/register', authRateLimit, (req, res) => {
-  res.json({ message: 'Register endpoint - coming soon' });
+  res.status(301).json({ message: 'Use POST /api/v1/auth/register instead' });
 });
 
 app.post('/api/v1/auth/password-reset', passwordResetRateLimit, (req, res) => {
@@ -96,7 +100,9 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Backend API running on http://localhost:${PORT}`);
+  console.log(`🚀 BookMeThat Backend API running on http://localhost:${PORT}`);
+  console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔧 Mock Mode: Stripe=${process.env.USE_MOCK_STRIPE !== 'false'}, Airalo=${process.env.USE_MOCK_AIRALO !== 'false'}, Booking=${process.env.USE_MOCK_BOOKING !== 'false'}`);
   console.log(`🔒 Security features enabled:`);
   console.log(`   ✅ Rate limiting`);
   console.log(`   ✅ Malicious content detection`);
@@ -104,4 +110,10 @@ app.listen(PORT, () => {
   console.log(`   ✅ Security headers (Helmet)`);
   console.log(`   ✅ CORS protection`);
   console.log(`   ✅ Request logging`);
+  console.log(`\n📚 API Endpoints:`);
+  console.log(`   GET  /health - Health check`);
+  console.log(`   POST /api/v1/auth/register - Create account`);
+  console.log(`   POST /api/v1/auth/login - Login`);
+  console.log(`   GET  /api/v1/auth/me - Get current user (requires auth)`);
+  console.log(`   POST /api/v1/auth/logout - Logout`);
 });
