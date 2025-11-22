@@ -34,7 +34,7 @@ const blogPosts = [
     author: 'Sarah Johnson',
     date: '2025-11-15',
     readTime: '8 min read',
-    image: '/blog/workation-2025.jpg',
+    image: 'https://images.pexels.com/photos/4246120/pexels-photo-4246120.jpeg?auto=compress&cs=tinysrgb&w=1200',
     featured: true,
   },
   {
@@ -45,7 +45,7 @@ const blogPosts = [
     author: 'Michael Chen',
     date: '2025-11-12',
     readTime: '10 min read',
-    image: '/blog/sustainable-travel.jpg',
+    image: 'https://images.pexels.com/photos/1108572/pexels-photo-1108572.jpeg?auto=compress&cs=tinysrgb&w=1200',
     featured: true,
   },
   {
@@ -56,7 +56,7 @@ const blogPosts = [
     author: 'Emma Rodriguez',
     date: '2025-11-10',
     readTime: '9 min read',
-    image: '/blog/budget-travel.jpg',
+    image: 'https://images.pexels.com/photos/1268855/pexels-photo-1268855.jpeg?auto=compress&cs=tinysrgb&w=1200',
     featured: true,
   },
   {
@@ -67,7 +67,7 @@ const blogPosts = [
     author: 'David Kim',
     date: '2025-11-08',
     readTime: '6 min read',
-    image: '/blog/esim-guide.jpg',
+    image: 'https://images.pexels.com/photos/163097/twitter-social-media-communication-internet-network-163097.jpeg?auto=compress&cs=tinysrgb&w=1200',
   },
   {
     id: 'solo-travel-safety-guide',
@@ -77,7 +77,7 @@ const blogPosts = [
     author: 'Rachel Martinez',
     date: '2025-11-05',
     readTime: '10 min read',
-    image: '/blog/solo-travel.jpg',
+    image: 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=1200',
   },
   {
     id: 'luxury-travel-on-budget',
@@ -87,7 +87,7 @@ const blogPosts = [
     author: 'James Thompson',
     date: '2025-11-03',
     readTime: '8 min read',
-    image: '/blog/luxury-budget.jpg',
+    image: 'https://images.pexels.com/photos/338504/pexels-photo-338504.jpeg?auto=compress&cs=tinysrgb&w=1200',
   },
   {
     id: 'last-minute-booking-strategies',
@@ -97,7 +97,7 @@ const blogPosts = [
     author: 'Lisa Chen',
     date: '2025-11-01',
     readTime: '7 min read',
-    image: '/blog/last-minute.jpg',
+    image: 'https://images.pexels.com/photos/271639/pexels-photo-271639.jpeg?auto=compress&cs=tinysrgb&w=1200',
   },
   {
     id: 'family-vacation-destinations-2025',
@@ -107,7 +107,7 @@ const blogPosts = [
     author: 'Amanda Wilson',
     date: '2025-10-28',
     readTime: '11 min read',
-    image: '/blog/family-vacation.jpg',
+    image: 'https://images.pexels.com/photos/1320686/pexels-photo-1320686.jpeg?auto=compress&cs=tinysrgb&w=1200',
   },
   {
     id: 'digital-nomad-packing-essentials',
@@ -117,7 +117,7 @@ const blogPosts = [
     author: 'Alex Martinez',
     date: '2025-10-25',
     readTime: '9 min read',
-    image: '/blog/nomad-packing.jpg',
+    image: 'https://images.pexels.com/photos/2422915/pexels-photo-2422915.jpeg?auto=compress&cs=tinysrgb&w=1200',
   },
   {
     id: 'travel-planning-checklist-2025',
@@ -127,7 +127,7 @@ const blogPosts = [
     author: 'Sarah Johnson',
     date: '2025-10-22',
     readTime: '8 min read',
-    image: '/blog/travel-checklist.jpg',
+    image: 'https://images.pexels.com/photos/1252983/pexels-photo-1252983.jpeg?auto=compress&cs=tinysrgb&w=1200',
   },
   {
     id: 'hidden-gems-alternative-destinations',
@@ -137,7 +137,7 @@ const blogPosts = [
     author: 'Michael Chen',
     date: '2025-10-20',
     readTime: '10 min read',
-    image: '/blog/hidden-gems.jpg',
+    image: 'https://images.pexels.com/photos/1008155/pexels-photo-1008155.jpeg?auto=compress&cs=tinysrgb&w=1200',
   },
 ];
 
