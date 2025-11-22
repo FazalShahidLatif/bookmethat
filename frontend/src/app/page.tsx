@@ -107,7 +107,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Header transparent={true} />
+      <Header />
       {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
