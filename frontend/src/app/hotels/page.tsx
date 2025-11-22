@@ -153,8 +153,8 @@ export default function HotelsPage() {
       <main className="min-h-screen bg-white">
 
       {/* Hero Section with Search */}
-      <section className="relative h-[600px] bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
+      <section className="relative text-white py-32 px-4 overflow-hidden">
+        <div className="absolute inset-0 z-0">
           <OptimizedImage
             src={getDestinationImage('hotel')}
             alt="Luxury hotel room"
@@ -162,84 +162,171 @@ export default function HotelsPage() {
             objectFit="cover"
             priority
           />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/95 via-indigo-900/90 to-purple-900/85" />
         </div>
-        <div className="relative max-w-6xl mx-auto px-4 h-full flex flex-col justify-center">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-center">Find Your Perfect Hotel</h1>
-          <p className="text-xl mb-8 text-center text-blue-100 max-w-2xl mx-auto">
-            2 million+ hotels worldwide. Compare prices, read reviews, and book instantly with free cancellation.
-          </p>
+        
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-in">
+              Discover Your Perfect Stay
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-100 mb-4 max-w-3xl mx-auto">
+              2 million+ hotels worldwide • Compare prices instantly • Book with confidence
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-sm mt-6">
+              <div className="flex items-center gap-2">
+                <span className="text-3xl">💰</span>
+                <span>Best Price Guarantee</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-3xl">🆓</span>
+                <span>Free Cancellation</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-3xl">⚡</span>
+                <span>Instant Confirmation</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-3xl">⭐</span>
+                <span>Verified Reviews</span>
+              </div>
+            </div>
+          </div>
           
-          {/* Search Box */}
-          <div className="bg-white rounded-xl shadow-2xl p-6 max-w-4xl mx-auto w-full">
-            <div className="grid md:grid-cols-4 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Where are you going?</label>
-                <input 
-                  type="text" 
-                  placeholder="City, hotel, or destination"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                />
+          {/* Enhanced Search Box */}
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-5xl mx-auto backdrop-blur-sm">
+            <form action="/search/hotels" method="GET">
+              <div className="grid md:grid-cols-4 gap-4 mb-4">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    🏨 Destination
+                  </label>
+                  <input 
+                    type="text"
+                    name="destination"
+                    required
+                    placeholder="Where do you want to stay?"
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-400"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    📅 Check-in
+                  </label>
+                  <input 
+                    type="date"
+                    name="checkin"
+                    required
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    📅 Check-out
+                  </label>
+                  <input 
+                    type="date"
+                    name="checkout"
+                    required
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Check-in</label>
-                <input 
-                  type="date" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                />
+              
+              <div className="grid md:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    👥 Adults
+                  </label>
+                  <select name="adults" className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900">
+                    <option value="1">1 Adult</option>
+                    <option value="2">2 Adults</option>
+                    <option value="3">3 Adults</option>
+                    <option value="4">4+ Adults</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    👶 Children
+                  </label>
+                  <select name="children" className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900">
+                    <option value="0">0 Children</option>
+                    <option value="1">1 Child</option>
+                    <option value="2">2 Children</option>
+                    <option value="3">3+ Children</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    🚪 Rooms
+                  </label>
+                  <select name="rooms" className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900">
+                    <option value="1">1 Room</option>
+                    <option value="2">2 Rooms</option>
+                    <option value="3">3+ Rooms</option>
+                  </select>
+                </div>
+                <div className="flex items-end">
+                  <button 
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-lg font-bold text-lg hover:from-blue-700 hover:to-purple-700 transform hover:scale-105 transition-all shadow-lg"
+                  >
+                    🔍 Search Hotels
+                  </button>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Check-out</label>
-                <input 
-                  type="date" 
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
-                />
-              </div>
+            </form>
+            
+            <div className="mt-4 text-center text-sm text-gray-500">
+              💡 <strong>Tip:</strong> Book 3+ months in advance for up to 40% off • Most hotels offer free cancellation
             </div>
-            <div className="grid md:grid-cols-3 gap-4 mt-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Adults</label>
-                <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
-                  <option>1 Adult</option>
-                  <option>2 Adults</option>
-                  <option>3 Adults</option>
-                  <option>4+ Adults</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Children</label>
-                <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
-                  <option>0 Children</option>
-                  <option>1 Child</option>
-                  <option>2 Children</option>
-                  <option>3+ Children</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Rooms</label>
-                <select className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900">
-                  <option>1 Room</option>
-                  <option>2 Rooms</option>
-                  <option>3+ Rooms</option>
-                </select>
-              </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Stats Bar */}
+      <section className="bg-gradient-to-r from-blue-600 to-purple-600 py-12">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">2M+</div>
+              <div className="text-blue-100 text-sm md:text-base">Hotels Worldwide</div>
             </div>
-            <button className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition mt-4">
-              Search Hotels
-            </button>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">190+</div>
+              <div className="text-blue-100 text-sm md:text-base">Countries Covered</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">50M+</div>
+              <div className="text-blue-100 text-sm md:text-base">Happy Guests</div>
+            </div>
+            <div>
+              <div className="text-4xl md:text-5xl font-bold mb-2">24/7</div>
+              <div className="text-blue-100 text-sm md:text-base">Customer Support</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">Why Book Hotels with bookmethat?</h2>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Why Book Hotels with bookmethat?</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Join millions of travelers who trust us for hassle-free hotel bookings
+            </p>
+          </div>
+          
           <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-sm text-center hover:shadow-lg transition">
-                <div className="text-5xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+              <div 
+                key={index} 
+                className="bg-white p-8 rounded-2xl shadow-md hover:shadow-2xl transition-all transform hover:scale-105 border border-gray-100"
+              >
+                <div className="text-6xl mb-4">{feature.icon}</div>
+                <h3 className="text-2xl font-bold mb-3 text-gray-900">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -247,58 +334,78 @@ export default function HotelsPage() {
       </section>
 
       {/* Featured Destinations */}
-      <section className="py-16 bg-white">
+      <section className="py-20 bg-white">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-4">Popular Hotel Destinations</h2>
-          <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
-            Discover amazing hotels in the world's most sought-after destinations
-          </p>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Popular Hotel Destinations</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Discover amazing hotels in the world's most sought-after destinations
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {featuredDestinations.map((destination, index) => (
-              <div key={index} className="group cursor-pointer rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition">
-                <div className="relative h-64">
+              <Link
+                key={index}
+                href={`/destinations/${destination.image}`}
+                className="group cursor-pointer rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all transform hover:scale-105"
+              >
+                <div className="relative h-72">
                   <OptimizedImage
                     src={getDestinationImage(destination.image)}
                     alt={destination.name}
                     fill
                     objectFit="cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-blue-900/80 transition-all" />
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="text-2xl font-bold mb-1">{destination.name}</h3>
-                    <p className="text-blue-200 text-sm mb-2">{destination.country}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm">{destination.hotels} hotels</span>
-                      <span className="text-sm font-semibold">From {destination.avgPrice}/night</span>
+                    <h3 className="text-3xl font-bold mb-2 group-hover:text-blue-200 transition">{destination.name}</h3>
+                    <p className="text-blue-200 text-sm mb-3">{destination.country}</p>
+                    <div className="flex justify-between items-center text-sm bg-white/10 backdrop-blur-sm rounded-lg p-3">
+                      <span className="font-semibold">{destination.hotels} hotels</span>
+                      <span className="font-bold text-green-300">From {destination.avgPrice}/night</span>
                     </div>
                   </div>
                 </div>
-                <div className="p-4 bg-white">
-                  <p className="text-gray-600 text-sm">{destination.description}</p>
+                <div className="p-5 bg-white group-hover:bg-gray-50 transition">
+                  <p className="text-gray-600 text-sm leading-relaxed">{destination.description}</p>
+                  <div className="mt-3 text-blue-600 font-semibold text-sm flex items-center gap-2">
+                    Explore Hotels <span className="group-hover:translate-x-2 transition-transform">→</span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
       {/* Hotel Types */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-4">Explore Hotel Types</h2>
-          <p className="text-xl text-gray-600 text-center mb-12 max-w-3xl mx-auto">
-            From budget hostels to luxury resorts, find the perfect accommodation for your travel style
-          </p>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">Explore Hotel Types</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              From budget hostels to luxury resorts, find the perfect accommodation for your travel style
+            </p>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-8">
             {hotelTypes.map((type, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition border border-gray-200">
-                <div className="text-5xl mb-4">{type.icon}</div>
-                <h3 className="text-xl font-bold mb-2">{type.title}</h3>
-                <p className="text-gray-600 mb-3">{type.description}</p>
-                <p className="text-blue-600 font-semibold text-sm">{type.count}</p>
-              </div>
+              <Link
+                key={index}
+                href={`/hotels?type=${type.title.toLowerCase().replace(/\s+/g, '-')}`}
+                className="bg-white p-8 rounded-2xl shadow-md hover:shadow-2xl transition-all border border-gray-100 group transform hover:scale-105"
+              >
+                <div className="text-6xl mb-5 group-hover:scale-110 transition-transform">{type.icon}</div>
+                <h3 className="text-2xl font-bold mb-3 text-gray-900 group-hover:text-blue-600 transition">{type.title}</h3>
+                <p className="text-gray-600 mb-4 leading-relaxed">{type.description}</p>
+                <p className="text-blue-600 font-bold text-sm bg-blue-50 inline-block px-4 py-2 rounded-full">
+                  {type.count}
+                </p>
+                <div className="mt-4 text-blue-600 font-semibold text-sm flex items-center gap-2">
+                  Browse {type.title} <span className="group-hover:translate-x-2 transition-transform">→</span>
+                </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -373,32 +480,50 @@ export default function HotelsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-6">Ready to Find Your Perfect Hotel?</h2>
-          <p className="text-xl mb-8 text-blue-100">
-            Join millions of travelers who trust bookmethat for their hotel bookings
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Find Your Perfect Hotel?</h2>
+          <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto leading-relaxed">
+            Join 50 million+ travelers who trust bookmethat for their hotel bookings worldwide
           </p>
-          <a 
-            href="#"
-            className="inline-block bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition"
-          >
-            Start Searching Hotels
-          </a>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a 
+              href="#"
+              className="inline-flex items-center justify-center gap-2 bg-white text-blue-600 px-10 py-5 rounded-xl font-bold text-lg hover:bg-blue-50 transition-all transform hover:scale-105 shadow-2xl"
+            >
+              🔍 Start Searching Hotels
+            </a>
+            <a 
+              href="/help"
+              className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-sm border-2 border-white text-white px-10 py-5 rounded-xl font-bold text-lg hover:bg-white/20 transition-all"
+            >
+              💬 Need Help?
+            </a>
+          </div>
+          
+          <div className="mt-12 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+            <div>
+              <div className="text-3xl font-bold mb-1">98%</div>
+              <div className="text-blue-200 text-sm">Customer Satisfaction</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold mb-1">4.8★</div>
+              <div className="text-blue-200 text-sm">Average Rating</div>
+            </div>
+            <div>
+              <div className="text-3xl font-bold mb-1">5M+</div>
+              <div className="text-blue-200 text-sm">Reviews</div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white py-8">
-        <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="text-gray-400">© 2025 bookmethat. All rights reserved.</p>
-          <div className="mt-4 flex gap-6 justify-center text-sm">
-            <Link href="/privacy" className="text-gray-400 hover:text-white transition">Privacy</Link>
-            <Link href="/terms" className="text-gray-400 hover:text-white transition">Terms</Link>
-            <Link href="/contact" className="text-gray-400 hover:text-white transition">Contact</Link>
-          </div>
-        </div>
-      </footer>
+      {/* Remove duplicate footer */}
     </main>
       <Footer />
     </>
