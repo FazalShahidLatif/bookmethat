@@ -102,17 +102,6 @@ export default function HelpPage() {
     <>
       <Header />
       <main className="min-h-screen bg-white">
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <nav className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-blue-600">bookmethat</Link>
-          <div className="flex gap-6">
-            <Link href="/about" className="text-gray-600 hover:text-gray-900 transition">About</Link>
-            <Link href="/blog" className="text-gray-600 hover:text-gray-900 transition">Blog</Link>
-            <Link href="/contact" className="text-gray-600 hover:text-gray-900 transition">Contact</Link>
-          </div>
-        </nav>
-      </header>
-
       {/* Hero */}
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
