@@ -48,6 +48,11 @@ export default function FamilyVacationDestinationsPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Social Share Buttons */}
+        <div className="mb-8 pb-8 border-b border-gray-200">
+          <SocialShareButtons url={pageUrl} title={pageTitle} />
+        </div>
+
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             Family travel creates bonds and memories that last lifetimes, but finding destinations that engage children while satisfying adults requires careful selection. The best family vacations balance education with entertainment, safety with adventure, and relaxation with excitement. After years of research and feedback from thousands of traveling families, we've identified destinations that consistently delight kids and parents alike across different age groups, interests, and budgets.

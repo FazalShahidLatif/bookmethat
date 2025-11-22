@@ -48,6 +48,11 @@ export default function DigitalNomadPackingPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Social Share Buttons */}
+        <div className="mb-8 pb-8 border-b border-gray-200">
+          <SocialShareButtons url={pageUrl} title={pageTitle} />
+        </div>
+
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             After years of helping thousands of digital nomads optimize their travel setups, we've learned that packing effectively makes the difference between frustration and freedom. The right gear enables productivity anywhere, while overpacking creates unnecessary stress and baggage fees. This comprehensive guide covers every essential item you need to work remotely while traveling, based on real-world experience from full-time nomads who've tested gear across six continents.

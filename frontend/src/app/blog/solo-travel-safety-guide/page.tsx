@@ -48,6 +48,11 @@ export default function SoloTravelSafetyPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Social Share Buttons */}
+        <div className="mb-8 pb-8 border-b border-gray-200">
+          <SocialShareButtons url={pageUrl} title={pageTitle} />
+        </div>
+
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             Solo travel offers unmatched freedom, self-discovery, and adventure, but legitimate safety concerns can hold people back from taking the leap. The truth is that millions travel alone safely every year by following smart precautions and trusting their instincts. This comprehensive guide compiles safety strategies from experienced solo travelers, security experts, and years of real-world experience to help you navigate the world independently with confidence.

@@ -48,6 +48,11 @@ export default function BudgetTravelTipsPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Social Share Buttons */}
+        <div className="mb-8 pb-8 border-b border-gray-200">
+          <SocialShareButtons url={pageUrl} title={pageTitle} />
+        </div>
+
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             Traveling the world doesn't require a trust fund or six-figure income. With strategic planning and smart choices, exploring incredible destinations on $30-50 per day is entirely achievable. After years of helping budget travelers stretch their money further and personally backpacking across 60+ countries on shoestring budgets, we've compiled the most effective strategies for affordable travel without sacrificing experiences or safety. This is the ultimate guide to traveling more while spending less.

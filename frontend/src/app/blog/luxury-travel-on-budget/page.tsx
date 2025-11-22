@@ -48,6 +48,11 @@ export default function LuxuryTravelBudgetPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Social Share Buttons */}
+        <div className="mb-8 pb-8 border-b border-gray-200">
+          <SocialShareButtons url={pageUrl} title={pageTitle} />
+        </div>
+
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             Luxury travel seems reserved for the wealthy—$500 per night hotels, $5,000 business class flights, and $200 dinners. Yet thousands of travelers experience genuine luxury at a fraction of these prices through strategic planning, smart use of loyalty programs, and knowing when and where luxury becomes surprisingly affordable. This comprehensive guide reveals how to access premium travel experiences without premium prices, transforming your travel quality without destroying your budget.

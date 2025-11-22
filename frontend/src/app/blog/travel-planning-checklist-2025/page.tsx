@@ -48,6 +48,11 @@ export default function TravelPlanningChecklistPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Social Share Buttons */}
+        <div className="mb-8 pb-8 border-b border-gray-200">
+          <SocialShareButtons url={pageUrl} title={pageTitle} />
+        </div>
+
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             Successful travel starts long before departure. Whether planning a weekend getaway or multi-month adventure, systematic preparation transforms chaotic last-minute scrambling into smooth, stress-free experiences. This comprehensive checklist guides you through every planning phase—from initial inspiration through post-trip follow-up—ensuring nothing falls through the cracks. Bookmark this guide and reference it each time you plan a trip for organized, confident travel preparation.

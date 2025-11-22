@@ -48,6 +48,11 @@ export default function SustainableTravelPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Social Share Buttons */}
+        <div className="mb-8 pb-8 border-b border-gray-200">
+          <SocialShareButtons url={pageUrl} title={pageTitle} />
+        </div>
+
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             Tourism accounts for approximately 8% of global carbon emissions, yet travel enriches our lives, broadens perspectives, and supports countless communities worldwide. The good news? Sustainable travel isn't about staying home—it's about making conscious choices that minimize environmental impact while maximizing positive contributions to local communities. This comprehensive guide explores how modern travelers can explore responsibly without sacrificing comfort or adventure.

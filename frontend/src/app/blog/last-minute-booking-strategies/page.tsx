@@ -48,6 +48,11 @@ export default function LastMinuteBookingPage() {
 
       {/* Content */}
       <div className="max-w-4xl mx-auto px-4 py-16">
+        {/* Social Share Buttons */}
+        <div className="mb-8 pb-8 border-b border-gray-200">
+          <SocialShareButtons url={pageUrl} title={pageTitle} />
+        </div>
+
         <div className="prose prose-lg max-w-none">
           <p className="text-xl text-gray-700 mb-8 leading-relaxed">
             Conventional wisdom says book travel far in advance for the best prices. While true for many situations, last-minute booking can yield exceptional deals for flexible travelers willing to embrace spontaneity. Hotels desperate to fill empty rooms, airlines wanting to sell remaining seats, and tour operators seeking to cover costs all discount inventory as departure dates approach. This guide reveals when last-minute booking saves money, when it backfires, and strategies to maximize your chances of scoring incredible deals while traveling spontaneously.
