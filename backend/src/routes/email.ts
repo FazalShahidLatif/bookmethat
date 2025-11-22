@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import { emailService } from '../services/email';
 import { body, validationResult } from 'express-validator';
 
@@ -19,7 +19,7 @@ router.post(
     body('guestName').notEmpty().withMessage('Guest name is required'),
     body('totalPrice').notEmpty().withMessage('Total price is required'),
   ],
-  async (req, res) => {
+  async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -51,7 +51,7 @@ router.post(
     body('name').notEmpty().withMessage('Name is required'),
     body('email').isEmail().withMessage('Valid email is required'),
   ],
-  async (req, res) => {
+  async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -83,7 +83,7 @@ router.post(
     body('name').notEmpty().withMessage('Name is required'),
     body('resetLink').isURL().withMessage('Valid reset link is required'),
   ],
-  async (req, res) => {
+  async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -115,7 +115,7 @@ router.post(
     body('subject').notEmpty().withMessage('Subject is required'),
     body('html').notEmpty().withMessage('HTML content is required'),
   ],
-  async (req, res) => {
+  async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });

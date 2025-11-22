@@ -293,7 +293,7 @@ class EmailService {
     try {
       // If template is specified, use it
       if (options.template && options.templateData) {
-        const template = emailTemplates[options.template](options.templateData);
+        const template = emailTemplates[options.template](options.templateData as any);
         options.subject = template.subject;
         options.html = template.html;
         options.text = template.text;
@@ -367,6 +367,7 @@ class EmailService {
   }): Promise<boolean> {
     return this.sendEmail({
       to: data.to,
+      subject: '', // Will be set by template
       template: 'bookingConfirmation',
       templateData: data,
     });
@@ -382,6 +383,7 @@ class EmailService {
   }): Promise<boolean> {
     return this.sendEmail({
       to: data.to,
+      subject: '', // Will be set by template
       template: 'welcomeEmail',
       templateData: data,
     });
@@ -397,6 +399,7 @@ class EmailService {
   }): Promise<boolean> {
     return this.sendEmail({
       to: data.to,
+      subject: '', // Will be set by template
       template: 'passwordReset',
       templateData: data,
     });
