@@ -3,12 +3,20 @@
 ## Project Overview
 bookmethat.com is a full-stack OTA (Online Travel Agency) marketplace + eSIM/virtual line provisioning platform. Frontend hosted on Netlify, backend as serverless microservices.
 
+### Platform Coverage
+- **Web:** Progressive Web App (PWA) - Next.js
+- **Mobile Apps:** React Native (iOS & Android) - downloadable from website
+- **Desktop Apps:** Electron (Windows, macOS, Linux) - downloadable from website
+- **Services:** Hotels, Flights, Cars, Activities, eSIM, **Pakistan Railway Train Reservations**
+
 ## Tech Stack
-- **Frontend:** Next.js 14+ (App Router), TypeScript, Tailwind CSS, shadcn/ui
+- **Web Frontend:** Next.js 14+ (App Router), TypeScript, Tailwind CSS, shadcn/ui
+- **Mobile Apps:** React Native (Expo), TypeScript, NativeWind
+- **Desktop Apps:** Electron + Next.js, TypeScript
 - **Backend:** Node.js, TypeScript, serverless functions
 - **Database:** PostgreSQL (Supabase/Neon), Redis (Upstash)
-- **Payments:** Stripe
-- **Hosting:** Netlify (frontend), AWS Lambda/Render (backend)
+- **Payments:** Stripe, JazzCash (Pakistan), EasyPaisa (Pakistan)
+- **Hosting:** Netlify (web), AWS Lambda/Render (backend), App Store/Play Store (mobile)
 
 ## Project Structure
 
@@ -43,8 +51,14 @@ backend/
 │   ├── handlers/       # Lambda handlers
 │   ├── models/         # Data models
 │   └── services/       # Business logic
+├── trains/             # Pakistan Railway integration
+│   ├── pr-api.ts      # Pakistan Railway API client
+│   └── services/      # Train booking logic
 ├── esims/              # eSIM provisioning
-├── payments/           # Stripe integration
+├── payments/           # Payment integrations
+│   ├── stripe/        # International payments
+│   ├── jazzcash/      # Pakistan mobile wallet
+│   └── easypaisa/     # Pakistan mobile wallet
 ├── auth/               # Authentication
 ├── catalog/            # Property inventory
 ├── notifications/      # Email/SMS
@@ -52,6 +66,29 @@ backend/
     ├── db/            # Database client
     ├── types/         # TypeScript types
     └── utils/         # Common utilities
+```
+
+### Mobile App (`/mobile`)
+```
+mobile/
+├── src/
+│   ├── screens/        # React Native screens
+│   ├── components/     # Reusable components
+│   ├── navigation/     # React Navigation setup
+│   ├── services/       # API clients
+│   └── store/          # State management (Zustand/Redux)
+├── app.json           # Expo configuration
+└── package.json
+```
+
+### Desktop App (`/desktop`)
+```
+desktop/
+├── electron/           # Electron main process
+│   ├── main.ts        # Main process entry
+│   └── preload.ts     # Preload scripts
+├── renderer/          # Next.js renderer (shared with web)
+└── package.json
 ```
 
 ## Key Development Patterns
@@ -215,18 +252,79 @@ export async function generateMetadata({ params }) {
       images: [property.mainImage],
     },
   };
+### Airalo eSIM API
+```typescript
+// backend/esims/adapters/airalo.ts
+async function provisionESIM(planId: string) {
+  const response = await fetch('https://api.airalo.com/v2/orders', {
+    method: 'POST',
+    headers: { 'Authorization': `Bearer ${AIRALO_KEY}` },
+    body: JSON.stringify({ package_id: planId }),
+  });
+  
+  return response.json();
 }
 ```
 
-### Structured Data
+### Pakistan Railway API
 ```typescript
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'Hotel',
-  name: property.name,
-  address: property.address,
-  priceRange: `$${property.minPrice}-${property.maxPrice}`,
-};
+// backend/trains/pr-api.ts
+async function searchTrains(params: TrainSearchParams) {
+  const response = await fetch('https://api.pakrail.gov.pk/booking/v1/search', {
+    method: 'POST',
+    headers: { 
+      'Authorization': `Bearer ${PR_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      origin: params.from,
+      destination: params.to,
+      date: params.date,
+      class: params.class
+### Backend
+- `DATABASE_URL` - PostgreSQL connection string
+- `REDIS_URL` - Redis connection
+- `STRIPE_SECRET_KEY` - Stripe secret (international)
+- `JAZZCASH_MERCHANT_ID` - JazzCash merchant ID (Pakistan)
+- `JAZZCASH_PASSWORD` - JazzCash password (Pakistan)
+- `EASYPAISA_MERCHANT_ID` - EasyPaisa merchant ID (Pakistan)
+- `EASYPAISA_SECRET` - EasyPaisa secret (Pakistan)
+- `AIRALO_API_KEY` - eSIM provider key
+- `PR_API_KEY` - Pakistan Railway API key
+- `PR_API_SECRET` - Pakistan Railway API secret
+- `TWILIO_AUTH_TOKEN` - SMS/Voice
+async function bookTrain(bookingData: TrainBookingData) {
+  const response = await fetch('https://api.pakrail.gov.pk/booking/v1/book', {
+    method: 'POST',
+    headers: { 
+      'Authorization': `Bearer ${PR_API_KEY}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(bookingData),
+  });
+  
+  return response.json();
+}
+```
+
+### JazzCash Payment Integration
+```typescript
+// backend/payments/jazzcash/jazzcash.service.ts
+async function initiatePayment(params: JazzCashPaymentParams) {
+  const response = await fetch('https://sandbox.jazzcash.com.pk/ApplicationAPI/API/Payment/DoTransaction', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      pp_MerchantID: JAZZCASH_MERCHANT_ID,
+      pp_Password: JAZZCASH_PASSWORD,
+      pp_Amount: params.amount,
+      pp_TxnRefNo: params.transactionId,
+      // ... other required fields
+    }),
+  });
+  
+  return response.json();
+}
 ```
 
 ## Integration Points
@@ -244,17 +342,83 @@ const { error } = await stripe.redirectToCheckout({
 });
 ```
 
-### Airalo eSIM API
+## Mobile & Desktop Development
+
+### Mobile App (React Native)
+```bash
+# Start Expo development
+cd mobile && npx expo start
+
+# Build for Android
+npx eas build --platform android
+
+# Build for iOS
+npx eas build --platform ios
+```
+
+### Desktop App (Electron)
+```bash
+# Start Electron development
+cd desktop && npm run electron:dev
+
+# Build for Windows
+npm run build:win
+
+# Build for macOS
+npm run build:mac
+
+# Build for Linux
+npm run build:linux
+```
+
+### App Download Integration
+Add download links on website homepage:
 ```typescript
-// backend/esims/adapters/airalo.ts
-async function provisionESIM(planId: string) {
-  const response = await fetch('https://api.airalo.com/v2/orders', {
-    method: 'POST',
-    headers: { 'Authorization': `Bearer ${AIRALO_KEY}` },
-    body: JSON.stringify({ package_id: planId }),
-  });
-  
-  return response.json();
+// frontend/src/app/page.tsx
+<div className="app-downloads">
+  <a href="/downloads/BookMeThat-Setup.exe">
+    <Windows /> Download for Windows
+  </a>
+  <a href="/downloads/BookMeThat.dmg">
+    <Apple /> Download for macOS
+  </a>
+  <a href="https://play.google.com/store/apps/details?id=com.bookmethat">
+    <PlayStore /> Get on Google Play
+  </a>
+  <a href="https://apps.apple.com/app/bookmethat/id123456">
+    <AppStore /> Download on App Store
+  </a>
+</div>
+```
+
+## Pakistan-Specific Features
+
+### Train Booking Flow
+1. Search trains between stations (Karachi → Lahore, etc.)
+2. Select train, class (Economy, AC Business, AC Sleeper)
+3. Choose seats/berths
+4. Payment via JazzCash/EasyPaisa/Card
+5. Get e-ticket via email/SMS
+
+### Payment Methods Priority
+- **Pakistan:** JazzCash → EasyPaisa → Card
+- **International:** Stripe → PayPal
+
+## Resources
+
+- [Next.js Docs](https://nextjs.org/docs)
+- [React Native Docs](https://reactnative.dev/docs/getting-started)
+- [Electron Docs](https://www.electronjs.org/docs/latest)
+- [Stripe API](https://stripe.com/docs/api)
+- [JazzCash Integration](https://sandbox.jazzcash.com.pk/Sandbox)
+- [Pakistan Railway API](https://www.pakrail.gov.pk/api-docs) *(Note: Use actual API docs when available)*
+- [Prisma Docs](https://www.prisma.io/docs)
+- [Netlify Docs](https://docs.netlify.com)
+- [Airalo API](https://www.airalo.com/partners)
+
+---
+
+**Remember:** This is an MVP. Focus on shipping fast, then iterate based on user feedback.
 }
 ```
 
