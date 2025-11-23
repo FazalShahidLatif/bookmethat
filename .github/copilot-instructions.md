@@ -15,7 +15,7 @@ bookmethat.com is a full-stack OTA (Online Travel Agency) marketplace + eSIM/vir
 - **Desktop Apps:** Electron + Next.js, TypeScript
 - **Backend:** Node.js, TypeScript, serverless functions
 - **Database:** PostgreSQL (Supabase/Neon), Redis (Upstash)
-- **Payments:** Stripe, JazzCash (Pakistan), EasyPaisa (Pakistan)
+- **Payments:** Stripe, JazzCash (Pakistan), EasyPaisa (Pakistan), PayFast (South Africa)
 - **Hosting:** Netlify (web), AWS Lambda/Render (backend), App Store/Play Store (mobile)
 
 ## Project Structure
@@ -58,7 +58,8 @@ backend/
 ├── payments/           # Payment integrations
 │   ├── stripe/        # International payments
 │   ├── jazzcash/      # Pakistan mobile wallet
-│   └── easypaisa/     # Pakistan mobile wallet
+│   ├── easypaisa/     # Pakistan mobile wallet
+│   └── payfast/       # South Africa payments
 ├── auth/               # Authentication
 ├── catalog/            # Property inventory
 ├── notifications/      # Email/SMS
@@ -289,6 +290,9 @@ async function searchTrains(params: TrainSearchParams) {
 - `JAZZCASH_PASSWORD` - JazzCash password (Pakistan)
 - `EASYPAISA_MERCHANT_ID` - EasyPaisa merchant ID (Pakistan)
 - `EASYPAISA_SECRET` - EasyPaisa secret (Pakistan)
+- `PAYFAST_MERCHANT_ID` - PayFast merchant ID (South Africa)
+- `PAYFAST_MERCHANT_KEY` - PayFast merchant key (South Africa)
+- `PAYFAST_PASSPHRASE` - PayFast passphrase (South Africa)
 - `AIRALO_API_KEY` - eSIM provider key
 - `PR_API_KEY` - Pakistan Railway API key
 - `PR_API_SECRET` - Pakistan Railway API secret
@@ -324,6 +328,27 @@ async function initiatePayment(params: JazzCashPaymentParams) {
   });
   
   return response.json();
+}
+```
+
+### PayFast Payment Integration
+```typescript
+// backend/payments/payfast/payfast.service.ts
+async function initiatePayment(params: PayFastPaymentParams) {
+  // Build PayFast request with MD5 signature
+  const data = {
+    merchant_id: PAYFAST_MERCHANT_ID,
+    merchant_key: PAYFAST_MERCHANT_KEY,
+    amount: params.amount.toFixed(2),
+    item_name: params.itemName,
+    return_url: PAYFAST_RETURN_URL,
+    notify_url: PAYFAST_NOTIFY_URL,
+  };
+  
+  const signature = generateMD5Signature(data, PAYFAST_PASSPHRASE);
+  const paymentUrl = `https://www.payfast.co.za/eng/process?${queryString}&signature=${signature}`;
+  
+  return { success: true, paymentUrl };
 }
 ```
 
@@ -402,6 +427,7 @@ Add download links on website homepage:
 
 ### Payment Methods Priority
 - **Pakistan:** JazzCash → EasyPaisa → Card
+- **South Africa:** PayFast → Card
 - **International:** Stripe → PayPal
 
 ## Resources
