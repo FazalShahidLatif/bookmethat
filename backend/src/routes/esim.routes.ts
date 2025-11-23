@@ -12,6 +12,14 @@ import { authenticateToken } from './auth.routes';
 import { airaloService } from '../services/mock/airalo.service';
 import { stripeService } from '../services/mock/stripe.service';
 import { prisma } from '../lib/prisma';
+import {
+  requireAuth,
+  requireOwnership,
+  sanitizeInput,
+  preventDuplicateBooking,
+  validatePaymentAmount,
+  detectSuspiciousActivity,
+} from '../middleware/advanced-security';
 
 const router = Router();
 
@@ -85,7 +93,13 @@ router.get('/plans/:id', async (req: Request, res: Response) => {
  * POST /api/v1/esim/purchase
  * Purchase an eSIM plan
  */
-router.post('/purchase', authenticateToken, async (req: Request, res: Response) => {
+router.post('/purchase',
+  requireAuth,
+  sanitizeInput,
+  detectSuspiciousActivity,
+  preventDuplicateBooking,
+  validatePaymentAmount,
+  async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;
     
@@ -173,7 +187,7 @@ router.post('/purchase', authenticateToken, async (req: Request, res: Response) 
  * GET /api/v1/esim
  * List user's eSIM orders
  */
-router.get('/', authenticateToken, async (req: Request, res: Response) => {
+router.get('/', requireAuth, sanitizeInput, async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;
     const page = parseInt(req.query.page as string) || 1;
@@ -220,7 +234,11 @@ router.get('/', authenticateToken, async (req: Request, res: Response) => {
  * GET /api/v1/esim/:id
  * Get eSIM order details with QR code
  */
-router.get('/:id', authenticateToken, async (req: Request, res: Response) => {
+router.get('/:id',
+  requireAuth,
+  sanitizeInput,
+  requireOwnership('esim'),
+  async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;
     const { id } = req.params;

@@ -54,6 +54,7 @@ model User {
   favorites     Favorite[]
   payments      Payment[]
   esims         EsimOrder[]
+  trainBookings TrainBooking[]
   
   @@index([email])
   @@index([createdAt])
@@ -493,6 +494,73 @@ model Favorite {
 }
 
 // ============================================
+// TRAIN BOOKINGS (Pakistan Railway)
+// ============================================
+
+model TrainBooking {
+  id              String   @id @default(uuid())
+  userId          String
+  bookingNumber   String   @unique // TR-XXXXXXXX format
+  
+  // Pakistan Railway PNR
+  pnr             String   @unique // Passenger Name Record from PR
+  
+  // Train details
+  trainId         String
+  trainNumber     String
+  trainName       String
+  
+  // Journey
+  fromStation     String   // Station name
+  fromStationCode String   // Station code (KHI, LHE, etc.)
+  toStation       String
+  toStationCode   String
+  
+  // Schedule
+  journeyDate     DateTime
+  departureTime   String
+  arrivalTime     String
+  duration        String   // "12h 30m"
+  
+  // Class & Seats
+  class           TrainClass
+  seats           Json     // Array of seat details { seatNumber, coach, price }
+  
+  // Passengers
+  passengers      Json     // Array of passenger details { name, age, gender, cnic }
+  passengerCount  Int
+  
+  // Contact
+  contactPhone    String
+  contactEmail    String
+  
+  // Pricing
+  totalAmount     Float
+  currency        String   @default("PKR")
+  
+  // Status
+  status          TrainBookingStatus @default(CONFIRMED)
+  paymentStatus   PaymentStatus @default(PENDING)
+  
+  // E-Ticket
+  eTicketUrl      String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  cancelledAt     DateTime?
+  
+  // Relations
+  user            User     @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+  @@index([pnr])
+  @@index([journeyDate])
+  @@index([fromStationCode, toStationCode])
+  @@map("train_bookings")
+}
+
+// ============================================
 // ENUMS
 // ============================================
 
@@ -526,4 +594,17 @@ enum EsimStatus {
   ACTIVE
   EXPIRED
   CANCELLED
+}
+
+enum TrainClass {
+  ECONOMY
+  AC_BUSINESS
+  AC_SLEEPER
+}
+
+enum TrainBookingStatus {
+  CONFIRMED
+  WAITING
+  CANCELLED
+  COMPLETED
 }

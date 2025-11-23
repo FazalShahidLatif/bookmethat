@@ -4,6 +4,8 @@ import emailRoutes from './routes/email';
 import authRoutes from './routes/auth.routes';
 import bookingRoutes from './routes/booking.routes';
 import esimRoutes from './routes/esim.routes';
+import trainRoutes from './routes/train.routes';
+import jazzCashRoutes from './payments/jazzcash/jazzcash.routes';
 import {
   helmetConfig,
   generalRateLimit,
@@ -58,6 +60,12 @@ app.use('/api/v1/bookings', bookingRateLimit, bookingRoutes);
 
 // eSIM routes with rate limiting
 app.use('/api/v1/esim', bookingRateLimit, esimRoutes);
+
+// Train booking routes (Pakistan Railway)
+app.use('/api/v1/trains', bookingRateLimit, trainRoutes);
+
+// JazzCash payment routes
+app.use('/api/v1/payments/jazzcash', jazzCashRoutes);
 
 // Legacy endpoints for backward compatibility
 app.post('/api/v1/auth/login', authRateLimit, (req, res) => {
@@ -123,4 +131,9 @@ app.listen(PORT, () => {
   console.log(`   POST /api/v1/esim/purchase - Purchase eSIM`);
   console.log(`   GET  /api/v1/esim - List user's eSIMs`);
   console.log(`   GET  /api/v1/esim/:id - Get eSIM with QR code`);
+  console.log(`   GET  /api/v1/trains/stations - List train stations`);
+  console.log(`   POST /api/v1/trains/search - Search trains`);
+  console.log(`   POST /api/v1/trains/book - Book train (requires auth)`);
+  console.log(`   GET  /api/v1/trains/booking/:pnr - Get booking by PNR`);
+  console.log(`   POST /api/v1/trains/cancel - Cancel booking (requires auth)`);
 });

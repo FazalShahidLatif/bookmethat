@@ -13,6 +13,15 @@ import { authenticateToken } from './auth.routes';
 import { bookingService } from '../services/mock/booking.service';
 import { stripeService } from '../services/mock/stripe.service';
 import { prisma } from '../lib/prisma';
+import {
+  requireAuth,
+  requireOwnership,
+  sanitizeInput,
+  validateBookingDates,
+  preventDuplicateBooking,
+  validatePaymentAmount,
+  detectSuspiciousActivity,
+} from '../middleware/advanced-security';
 
 const router = Router();
 
@@ -74,7 +83,14 @@ const createBookingSchema = z.object({
  * POST /api/v1/bookings
  * Create a new booking
  */
-router.post('/', authenticateToken, async (req: Request, res: Response) => {
+router.post('/',
+  requireAuth,
+  sanitizeInput,
+  detectSuspiciousActivity,
+  validateBookingDates,
+  preventDuplicateBooking,
+  validatePaymentAmount,
+  async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;
     
@@ -231,9 +247,13 @@ router.get('/:id', authenticateToken, async (req: Request, res: Response) => {
 
 /**
  * PUT /api/v1/bookings/:id/cancel
- * Cancel booking and process refund
+ * Cancel a booking and process refund
  */
-router.put('/:id/cancel', authenticateToken, async (req: Request, res: Response) => {
+router.put('/:id/cancel',
+  requireAuth,
+  sanitizeInput,
+  requireOwnership('booking'),
+  async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;
     const { id } = req.params;
