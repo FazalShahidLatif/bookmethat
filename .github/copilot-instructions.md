@@ -58,7 +58,7 @@ backend/
 ├── payments/           # Payment integrations
 │   ├── stripe/        # International payments
 │   ├── jazzcash/      # Pakistan mobile wallet
-│   ├── easypaisa/     # Pakistan mobile wallet
+│   ├── easypaisa/     # Pakistan mobile wallet (✅ Implemented)
 │   └── payfast/       # South Africa payments
 ├── auth/               # Authentication
 ├── catalog/            # Property inventory
@@ -349,6 +349,31 @@ async function initiatePayment(params: PayFastPaymentParams) {
   const paymentUrl = `https://www.payfast.co.za/eng/process?${queryString}&signature=${signature}`;
   
   return { success: true, paymentUrl };
+}
+```
+
+### EasyPaisa Payment Integration
+```typescript
+// backend/payments/easypaisa/easypaisa.service.ts
+async function initiatePayment(params: EasyPaisaPaymentParams) {
+  const requestData = {
+    storeId: EASYPAISA_STORE_ID,
+    orderId: params.transactionId,
+    transactionAmount: params.amount.toFixed(2),
+    transactionType: 'MA',
+    mobileAccountNo: params.customerPhone,
+    emailAddress: params.customerEmail,
+  };
+  
+  const signature = generateHMAC(requestData, EASYPAISA_HASH_KEY);
+  requestData.encryptedHashRequest = signature;
+  
+  const response = await fetch('https://easypay.easypaisa.com.pk/easypay/Index.jsf', {
+    method: 'POST',
+    body: new URLSearchParams(requestData),
+  });
+  
+  return response.json();
 }
 ```
 
