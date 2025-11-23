@@ -13,8 +13,8 @@ const PR_API_BASE_URL = process.env.PR_API_URL || 'https://api.pakrail.gov.pk/bo
 const PR_API_KEY = process.env.PR_API_KEY || '';
 const PR_API_SECRET = process.env.PR_API_SECRET || '';
 
-// Use mock mode if API keys not configured
-const MOCK_MODE = !PR_API_KEY || !PR_API_SECRET;
+// Use mock mode based on environment variable
+const MOCK_MODE = process.env.USE_MOCK_TRAINS !== 'false';
 
 /**
  * Train search parameters
