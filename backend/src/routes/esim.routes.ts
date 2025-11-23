@@ -135,10 +135,11 @@ router.post('/purchase',
     const order = await prisma.esimOrder.create({
       data: {
         userId,
+        orderNumber: `ES${Date.now()}`,
         planId: plan.id,
         planName: plan.title,
         country: plan.country,
-        dataAmount: plan.dataAmount,
+        dataAmount: `${plan.dataAmount}GB`,
         validityDays: plan.validityDays,
         price: plan.price,
         currency: plan.currency,
@@ -146,7 +147,6 @@ router.post('/purchase',
         iccid: esimData.iccid,
         qrCode: esimData.qrCode,
         activationCode: esimData.activationCode,
-        paymentId: paymentIntent.id,
         isMock: true,
         activatedAt: new Date(),
         expiresAt: esimData.expiresAt,
@@ -258,11 +258,12 @@ router.get('/:id',
     }
     
     // Calculate data usage (mock)
-    const dataUsed = order.status === 'ACTIVE' 
-      ? Math.floor(Math.random() * order.dataAmount * 0.5) // 0-50% used
+    const dataAmountNum = parseFloat(order.dataAmount) || 5; // Default to 5 if parsing fails
+    const dataUsed = order.status === 'ACTIVE'
+      ? Math.floor(Math.random() * dataAmountNum * 0.5) // 0-50% used
       : 0;
     
-    const dataRemaining = order.dataAmount - dataUsed;
+    const dataRemaining = dataAmountNum - dataUsed;
     
     res.json({
       success: true,
@@ -272,7 +273,7 @@ router.get('/:id',
           dataUsed,
           dataRemaining,
           dataTotal: order.dataAmount,
-          percentUsed: Math.round((dataUsed / order.dataAmount) * 100),
+          percentUsed: Math.round((dataUsed / dataAmountNum) * 100),
         },
         activation: {
           iccid: order.iccid,

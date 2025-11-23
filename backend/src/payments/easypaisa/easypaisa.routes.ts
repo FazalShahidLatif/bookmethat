@@ -53,7 +53,7 @@ router.post('/webhook', async (req: Request, res: Response) => {
         await prisma.trainBooking.update({
           where: { id: transactionId },
           data: {
-            paymentStatus: isSuccess ? 'PAID' : 'FAILED',
+            paymentStatus: isSuccess ? 'COMPLETED' : 'FAILED',
             status: isSuccess ? 'CONFIRMED' : 'CANCELLED',
           },
         });
@@ -67,7 +67,7 @@ router.post('/webhook', async (req: Request, res: Response) => {
       await prisma.booking.update({
         where: { id: transactionId },
         data: {
-          paymentStatus: isSuccess ? 'PAID' : 'FAILED',
+          paymentStatus: isSuccess ? 'COMPLETED' : 'FAILED',
           status: isSuccess ? 'CONFIRMED' : 'CANCELLED',
         },
       });

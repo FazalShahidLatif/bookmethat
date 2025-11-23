@@ -97,6 +97,18 @@ router.post('/',
     // Validate input
     const data = createBookingSchema.parse(req.body);
     
+    // Get user data
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: 'User not found',
+      });
+    }
+    
     // Process payment with mock Stripe
     const paymentIntent = await stripeService.createPaymentIntent({
       amount: Math.round(data.totalPrice * 100), // Convert to cents
@@ -111,13 +123,21 @@ router.post('/',
     const booking = await prisma.booking.create({
       data: {
         userId,
+        bookingNumber: `BK${Date.now()}`,
         type: data.type,
         status: 'CONFIRMED',
         totalPrice: data.totalPrice,
         currency: data.currency,
-        paymentId: paymentIntent.id,
+        guestName: 'Guest User',
+        guestEmail: user.email,
+        guestPhone: user.phone || '',
+        paymentStatus: 'COMPLETED',
+        paidAmount: data.totalPrice,
+        metadata: {
+          paymentIntentId: paymentIntent.id,
+          bookingData: data.bookingData,
+        },
         isMock: true,
-        bookingData: data.bookingData,
       },
     });
     
@@ -225,8 +245,9 @@ router.get('/:id', authenticateToken, async (req: Request, res: Response) => {
     
     // Get payment details if available
     let paymentDetails = null;
-    if (booking.paymentId) {
-      paymentDetails = await stripeService.getPaymentIntent(booking.paymentId);
+    const metadata = booking.metadata as any;
+    if (metadata?.paymentIntentId) {
+      paymentDetails = await stripeService.getPaymentIntent(metadata.paymentIntentId);
     }
     
     res.json({
@@ -289,9 +310,10 @@ router.put('/:id/cancel',
     
     // Process refund
     let refund = null;
-    if (booking.paymentId) {
+    const metadata = booking.metadata as any;
+    if (metadata?.paymentIntentId) {
       refund = await stripeService.createRefund({
-        paymentIntentId: booking.paymentId,
+        paymentIntentId: metadata.paymentIntentId,
         amount: Math.round(booking.totalPrice * 100), // Full refund
         reason: reason || 'requested_by_customer',
       });
@@ -346,12 +368,13 @@ router.get('/:id/receipt', authenticateToken, async (req: Request, res: Response
     }
     
     // Generate receipt data
+    const metadata = booking.metadata as any;
     const receipt = {
       bookingId: booking.id,
       bookingType: booking.type,
       status: booking.status,
       date: booking.createdAt,
-      details: booking.bookingData,
+      details: metadata?.bookingData,
       pricing: {
         subtotal: booking.totalPrice,
         tax: 0,
@@ -359,7 +382,7 @@ router.get('/:id/receipt', authenticateToken, async (req: Request, res: Response
         currency: booking.currency,
       },
       paymentMethod: 'Credit Card',
-      transactionId: booking.paymentId,
+      transactionId: metadata?.paymentIntentId,
     };
     
     res.json({

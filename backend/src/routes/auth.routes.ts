@@ -66,8 +66,8 @@ router.post('/register', async (req: Request, res: Response) => {
         lastName: data.lastName,
         phone: data.phone || null,
         emailVerified: false,
-        loyaltyPoints: 0,
-        loyaltyTier: 'BASIC',
+        points: 0,
+        tier: 'basic',
       },
     });
 
