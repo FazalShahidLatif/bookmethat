@@ -101,6 +101,19 @@ export default function HomePage() {
             },
           ],
         },
+        {
+          '@type': 'OfferCatalog',
+          name: 'Train Tickets',
+          itemListElement: [
+            {
+              '@type': 'Offer',
+              itemOffered: {
+                '@type': 'TrainReservation',
+                name: 'Pakistan Railway Tickets',
+              },
+            },
+          ],
+        },
       ],
     },
   };
@@ -165,6 +178,12 @@ export default function HomePage() {
                 <button className="w-full px-6 py-4 font-semibold rounded-xl bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center gap-2">
                   <span className="text-2xl">✈️</span>
                   <span>Flights</span>
+                </button>
+              </Link>
+              <Link href="/trains" className="flex-1 min-w-fit">
+                <button className="w-full px-6 py-4 font-semibold rounded-xl bg-white text-gray-700 border-2 border-gray-200 hover:border-blue-500 hover:text-blue-600 transition flex items-center justify-center gap-2">
+                  <span className="text-2xl">🚂</span>
+                  <span>Trains</span>
                 </button>
               </Link>
               <Link href="/cars" className="flex-1 min-w-fit">
@@ -418,7 +437,7 @@ export default function HomePage() {
               Everything you need in one place
             </p>
           </div>
-          <div className="grid md:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-6">
             <Link href="/hotels" className="group p-8 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 transform hover:scale-105 hover:border-blue-500">
               <div className="text-6xl mb-4">🏨</div>
               <h3 className="text-2xl font-bold mb-3 group-hover:text-blue-600 transition">Hotels & Resorts</h3>
@@ -431,6 +450,13 @@ export default function HomePage() {
               <h3 className="text-2xl font-bold mb-3 group-hover:text-blue-600 transition">Flights</h3>
               <p className="text-gray-600 mb-4">Compare 500+ airlines and save up to 40%</p>
               <span className="text-blue-600 font-semibold group-hover:underline">Find Flights →</span>
+            </Link>
+            
+            <Link href="/trains" className="group p-8 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 transform hover:scale-105 hover:border-blue-500">
+              <div className="text-6xl mb-4">🚂</div>
+              <h3 className="text-2xl font-bold mb-3 group-hover:text-blue-600 transition">Train Tickets</h3>
+              <p className="text-gray-600 mb-4">Pakistan Railway bookings across the country</p>
+              <span className="text-blue-600 font-semibold group-hover:underline">Book Trains →</span>
             </Link>
             
             <Link href="/cars" className="group p-8 bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 transform hover:scale-105 hover:border-blue-500">

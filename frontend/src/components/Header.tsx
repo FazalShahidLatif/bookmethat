@@ -11,11 +11,27 @@ interface HeaderProps {
 export default function Header({ variant = 'light', transparent = false }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [closeTimeout, setCloseTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const isLight = variant === 'light';
   const textColor = isLight ? 'text-gray-900' : 'text-white';
   const hoverColor = isLight ? 'hover:text-blue-600' : 'hover:text-blue-300';
   const bgColor = transparent ? 'bg-transparent' : (isLight ? 'bg-white' : 'bg-gray-900');
+
+  const handleMouseEnter = () => {
+    if (closeTimeout) {
+      clearTimeout(closeTimeout);
+      setCloseTimeout(null);
+    }
+    setServicesOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    const timeout = setTimeout(() => {
+      setServicesOpen(false);
+    }, 150); // 150ms delay before closing
+    setCloseTimeout(timeout);
+  };
 
   return (
     <header className={`${bgColor} ${transparent ? '' : 'shadow-sm'} sticky top-0 z-50 transition-colors`}>
@@ -31,8 +47,8 @@ export default function Header({ variant = 'light', transparent = false }: Heade
             {/* Services Dropdown */}
             <div 
               className="relative"
-              onMouseEnter={() => setServicesOpen(true)}
-              onMouseLeave={() => setServicesOpen(false)}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
             >
               <button className={`${textColor} ${hoverColor} transition font-medium flex items-center gap-1`}>
                 Services
@@ -42,7 +58,11 @@ export default function Header({ variant = 'light', transparent = false }: Heade
               </button>
               
               {servicesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 border border-gray-100">
+                <div 
+                  className="absolute top-full left-0 mt-2 w-56 bg-white rounded-lg shadow-xl py-2 border border-gray-100"
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                >
                   <Link href="/hotels" className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">🏨</span>
@@ -58,6 +78,15 @@ export default function Header({ variant = 'light', transparent = false }: Heade
                       <div>
                         <div className="font-semibold">Flights</div>
                         <div className="text-xs text-gray-500">500+ airlines</div>
+                      </div>
+                    </div>
+                  </Link>
+                  <Link href="/trains" className="block px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🚂</span>
+                      <div>
+                        <div className="font-semibold">Train Tickets</div>
+                        <div className="text-xs text-gray-500">Pakistan Railway</div>
                       </div>
                     </div>
                   </Link>
@@ -157,6 +186,9 @@ export default function Header({ variant = 'light', transparent = false }: Heade
               </Link>
               <Link href="/flights" className={`${textColor} ${hoverColor} transition font-medium flex items-center gap-2`}>
                 <span className="text-xl">✈️</span> Flights
+              </Link>
+              <Link href="/trains" className={`${textColor} ${hoverColor} transition font-medium flex items-center gap-2`}>
+                <span className="text-xl">🚂</span> Train Tickets
               </Link>
               <Link href="/cars" className={`${textColor} ${hoverColor} transition font-medium flex items-center gap-2`}>
                 <span className="text-xl">🚗</span> Car Rentals
