@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'use';
+import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
 import { 
   Train, ArrowLeft, Users, CreditCard, CheckCircle, 
@@ -65,7 +65,7 @@ export default function TrainBookingPage() {
 
   const removePassenger = (index: number) => {
     if (passengers.length > 1) {
-      setPassengers(passengers.filter((_, i) => i !== index));
+      setPassengers(passengers.filter((_: Passenger, i: number) => i !== index));
     }
   };
 
@@ -248,7 +248,7 @@ export default function TrainBookingPage() {
               </div>
 
               <div className="space-y-6">
-                {passengers.map((passenger, index) => (
+                {passengers.map((passenger: Passenger, index: number) => (
                   <div key={index} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="font-semibold text-gray-800">
