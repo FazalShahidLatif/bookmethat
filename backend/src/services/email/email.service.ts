@@ -73,6 +73,11 @@ interface EmailOptions {
   subject: string;
   html: string;
   text?: string;
+  attachments?: Array<{
+    filename: string;
+    content: Buffer;
+    contentType: string;
+  }>;
 }
 
 interface TrainBookingEmailData {
@@ -206,6 +211,9 @@ class EmailService {
       console.log(`📧 To: ${options.to}`);
       console.log(`📧 Subject: ${options.subject}`);
       console.log(`📧 From: ${EMAIL_FROM}`);
+      if (options.attachments && options.attachments.length > 0) {
+        console.log(`📧 Attachments: ${options.attachments.map(a => a.filename).join(', ')}`);
+      }
       console.log('📧 Content Preview:');
       console.log('📧', options.html.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...');
       console.log('📧 ========================================');
@@ -225,6 +233,7 @@ class EmailService {
         subject: options.subject,
         html: options.html,
         text: options.text,
+        attachments: options.attachments,
       });
 
       console.log('✅ Email sent successfully:', info.messageId);
@@ -236,9 +245,26 @@ class EmailService {
   }
 
   /**
-   * Send train booking confirmation email
+   * Send train booking confirmation email WITH PDF attachment
    */
   async sendTrainBookingConfirmation(data: TrainBookingEmailData): Promise<boolean> {
+    // Import ticket service dynamically to avoid circular dependency
+    const { ticketService } = await import('../ticket/ticket.service');
+    
+    // Generate PDF ticket
+    let pdfAttachment;
+    try {
+      const pdfBuffer = await ticketService.generateTrainTicketPDF(data.pnr);
+      pdfAttachment = {
+        filename: `train-ticket-${data.pnr}.pdf`,
+        content: pdfBuffer,
+        contentType: 'application/pdf',
+      };
+    } catch (error) {
+      console.error('Failed to generate PDF attachment:', error);
+      // Continue without attachment
+    }
+
     const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -404,6 +430,7 @@ Contact: ${data.guestEmail} | ${data.guestPhone}
       subject: `🎫 Train Booking Confirmed - PNR: ${data.pnr}`,
       html,
       text,
+      attachments: pdfAttachment ? [pdfAttachment] : undefined,
     });
   }
 

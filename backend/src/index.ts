@@ -10,6 +10,7 @@ import jazzCashRoutes from './payments/jazzcash/jazzcash.routes';
 import payFastRoutes from './payments/payfast/payfast.routes';
 import easyPaisaRoutes from './payments/easypaisa/easypaisa.routes';
 import webhookRoutes from './routes/webhook.routes';
+import ticketRoutes from './routes/ticket.routes';
 import {
   helmetConfig,
   generalRateLimit,
@@ -75,6 +76,9 @@ app.use('/api/v1/payments/easypaisa', easyPaisaRoutes);
 
 // Webhook routes (centralized for all payment gateways)
 app.use('/api/v1/webhooks', webhookRoutes);
+
+// E-Ticket routes (PDF download, QR codes)
+app.use('/api/v1/tickets', ticketRoutes);
 
 // Legacy endpoints for backward compatibility
 app.post('/api/v1/auth/login', authRateLimit, (req, res) => {
