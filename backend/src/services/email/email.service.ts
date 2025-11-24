@@ -6,21 +6,67 @@
  * - Cancellation notifications
  * - Payment receipts
  * - eSIM delivery
+ * 
+ * ⚠️  IMPORTANT: EMAIL CONFIGURATION REQUIRED!
+ * 
+ * Recommended Email Providers:
+ * 
+ * 1. **SendGrid** (https://sendgrid.com) - RECOMMENDED
+ *    - 100 emails/day free tier
+ *    - Excellent deliverability
+ *    - Easy API integration
+ *    Setup: Get API key from SendGrid dashboard
+ * 
+ * 2. **Mailgun** (https://mailgun.com)
+ *    - 5,000 emails/month free
+ *    - Great for transactional emails
+ *    Setup: Get SMTP credentials from Mailgun
+ * 
+ * 3. **Amazon SES** (https://aws.amazon.com/ses/)
+ *    - Very cheap ($0.10 per 1000 emails)
+ *    - High volume support
+ *    Setup: Configure AWS credentials
+ * 
+ * 4. **Postmark** (https://postmarkapp.com)
+ *    - Best deliverability rates
+ *    - Premium service
+ * 
+ * CONFIGURATION STEPS:
+ * 1. Choose a provider and sign up
+ * 2. Get SMTP credentials or API key
+ * 3. Add to backend/.env file:
+ * 
+ * For SendGrid (Recommended):
+ *   EMAIL_SERVICE=SendGrid
+ *   EMAIL_API_KEY=your-sendgrid-api-key-here
+ *   EMAIL_FROM=BookMeThat <info@bookmethat.com>
+ * 
+ * For SMTP (Mailgun, SES, etc.):
+ *   EMAIL_HOST=smtp.mailgun.org
+ *   EMAIL_PORT=587
+ *   EMAIL_USER=your-smtp-username
+ *   EMAIL_PASSWORD=your-smtp-password
+ *   EMAIL_FROM=BookMeThat <info@bookmethat.com>
+ * 
+ * ⚠️  TODO: Provide email credentials for info@bookmethat.com
+ * 
+ * Current Status: MOCK MODE (emails only logged to console)
  */
 
 import nodemailer from 'nodemailer';
 import { format } from 'date-fns';
 
-// Email configuration
-const SMTP_HOST = process.env.SMTP_HOST || 'smtp.gmail.com';
-const SMTP_PORT = parseInt(process.env.SMTP_PORT || '587');
-const SMTP_USER = process.env.SMTP_USER || '';
-const SMTP_PASS = process.env.SMTP_PASS || '';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@bookmethat.com';
-const FROM_NAME = process.env.FROM_NAME || 'BookMeThat';
+// Email configuration from environment variables
+const EMAIL_SERVICE = process.env.EMAIL_SERVICE; // e.g., 'SendGrid', 'Mailgun'
+const EMAIL_API_KEY = process.env.EMAIL_API_KEY; // API key for service-based auth
+const EMAIL_HOST = process.env.EMAIL_HOST; // SMTP host
+const EMAIL_PORT = parseInt(process.env.EMAIL_PORT || '587'); // SMTP port
+const EMAIL_USER = process.env.EMAIL_USER; // SMTP username
+const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD; // SMTP password or API key
+const EMAIL_FROM = process.env.EMAIL_FROM || 'BookMeThat <noreply@bookmethat.com>';
 
-// Mock mode for development
-const MOCK_MODE = process.env.USE_MOCK_EMAIL !== 'false';
+// Mock mode - enabled when no credentials provided
+const MOCK_MODE = !EMAIL_USER && !EMAIL_API_KEY && !EMAIL_HOST;
 
 interface EmailOptions {
   to: string;
@@ -66,18 +112,85 @@ interface BookingEmailData {
 
 class EmailService {
   private transporter: nodemailer.Transporter | null = null;
+  private isConfigured: boolean = false;
 
   constructor() {
-    if (!MOCK_MODE && SMTP_USER && SMTP_PASS) {
-      this.transporter = nodemailer.createTransport({
-        host: SMTP_HOST,
-        port: SMTP_PORT,
-        secure: SMTP_PORT === 465,
-        auth: {
-          user: SMTP_USER,
-          pass: SMTP_PASS,
-        },
-      });
+    this.initializeTransporter();
+  }
+
+  private initializeTransporter() {
+    if (MOCK_MODE) {
+      console.warn('');
+      console.warn('⚠️  ========================================');
+      console.warn('⚠️  EMAIL SERVICE NOT CONFIGURED!');
+      console.warn('⚠️  ========================================');
+      console.warn('');
+      console.warn('📧 Email notifications are in MOCK MODE.');
+      console.warn('   Emails will be logged to console only.');
+      console.warn('');
+      console.warn('To enable real email sending, choose a provider:');
+      console.warn('');
+      console.warn('1️⃣  SendGrid (Recommended - 100 emails/day free)');
+      console.warn('   https://sendgrid.com');
+      console.warn('   Add to .env:');
+      console.warn('     EMAIL_SERVICE=SendGrid');
+      console.warn('     EMAIL_API_KEY=your-sendgrid-api-key');
+      console.warn('     EMAIL_FROM=BookMeThat <info@bookmethat.com>');
+      console.warn('');
+      console.warn('2️⃣  Mailgun (5,000 emails/month free)');
+      console.warn('   https://mailgun.com');
+      console.warn('   Add to .env:');
+      console.warn('     EMAIL_HOST=smtp.mailgun.org');
+      console.warn('     EMAIL_PORT=587');
+      console.warn('     EMAIL_USER=your-mailgun-username');
+      console.warn('     EMAIL_PASSWORD=your-mailgun-password');
+      console.warn('     EMAIL_FROM=BookMeThat <info@bookmethat.com>');
+      console.warn('');
+      console.warn('3️⃣  Amazon SES (Cheapest for high volume)');
+      console.warn('   https://aws.amazon.com/ses/');
+      console.warn('');
+      console.warn('⚠️  ACTION REQUIRED:');
+      console.warn('   Please provide email credentials for info@bookmethat.com');
+      console.warn('');
+      console.warn('⚠️  ========================================');
+      console.warn('');
+      this.isConfigured = false;
+      return;
+    }
+
+    try {
+      let transportConfig: any = {};
+
+      // Service-based configuration (SendGrid, etc.)
+      if (EMAIL_SERVICE && EMAIL_API_KEY) {
+        transportConfig = {
+          service: EMAIL_SERVICE,
+          auth: {
+            user: 'apikey', // SendGrid uses 'apikey' as username
+            pass: EMAIL_API_KEY,
+          },
+        };
+      }
+      // SMTP configuration
+      else if (EMAIL_HOST && EMAIL_USER && EMAIL_PASSWORD) {
+        transportConfig = {
+          host: EMAIL_HOST,
+          port: EMAIL_PORT,
+          secure: EMAIL_PORT === 465, // true for 465, false for other ports
+          auth: {
+            user: EMAIL_USER,
+            pass: EMAIL_PASSWORD,
+          },
+        };
+      }
+
+      this.transporter = nodemailer.createTransport(transportConfig);
+      this.isConfigured = true;
+      console.log('✅ Email service configured successfully');
+      console.log(`📧 Sending emails from: ${EMAIL_FROM}`);
+    } catch (error) {
+      console.error('❌ Failed to initialize email service:', error);
+      this.isConfigured = false;
     }
   }
 
@@ -86,29 +199,35 @@ class EmailService {
    */
   private async sendEmail(options: EmailOptions): Promise<boolean> {
     if (MOCK_MODE) {
-      console.log('📧 [MOCK EMAIL] Sending email:', {
-        to: options.to,
-        subject: options.subject,
-        preview: options.html.substring(0, 100) + '...',
-      });
+      console.log('');
+      console.log('📧 ========================================');
+      console.log('📧 [MOCK EMAIL] Email would be sent:');
+      console.log('📧 ========================================');
+      console.log(`📧 To: ${options.to}`);
+      console.log(`📧 Subject: ${options.subject}`);
+      console.log(`📧 From: ${EMAIL_FROM}`);
+      console.log('📧 Content Preview:');
+      console.log('📧', options.html.substring(0, 150).replace(/<[^>]*>/g, '').trim() + '...');
+      console.log('📧 ========================================');
+      console.log('');
       return true;
     }
 
-    if (!this.transporter) {
+    if (!this.transporter || !this.isConfigured) {
       console.error('❌ Email transporter not configured');
       return false;
     }
 
     try {
       const info = await this.transporter.sendMail({
-        from: `"${FROM_NAME}" <${FROM_EMAIL}>`,
+        from: EMAIL_FROM,
         to: options.to,
         subject: options.subject,
         html: options.html,
         text: options.text,
       });
 
-      console.log('✅ Email sent:', info.messageId);
+      console.log('✅ Email sent successfully:', info.messageId);
       return true;
     } catch (error) {
       console.error('❌ Email sending failed:', error);
