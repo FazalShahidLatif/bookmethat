@@ -195,13 +195,13 @@ router.get('/user', authenticateToken, async (req: Request, res: Response) => {
     
     // Map train bookings to the format expected by frontend
     const trainBookingMap = new Map(
-      trainBookings.map(tb => [tb.bookingNumber, tb])
+      trainBookings.map((tb: any) => [tb.bookingNumber, tb])
     );
     
     // Enrich bookings with train details
-    const enrichedBookings = bookings.map(booking => {
+    const enrichedBookings = bookings.map((booking: any) => {
       if (booking.type === 'TRAIN' && booking.bookingNumber) {
-        const trainBooking = trainBookingMap.get(booking.bookingNumber);
+        const trainBooking: any = trainBookingMap.get(booking.bookingNumber);
         if (trainBooking) {
           return {
             id: booking.id,
