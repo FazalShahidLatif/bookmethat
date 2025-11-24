@@ -172,6 +172,78 @@ router.post('/',
 });
 
 /**
+ * GET /api/v1/bookings/user
+ * List user's bookings (simplified endpoint for frontend)
+ */
+router.get('/user', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.userId;
+    
+    // Get all bookings for the user
+    const bookings = await prisma.booking.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+    
+    // Get train bookings separately
+    const trainBookings = await prisma.trainBooking.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+    });
+    
+    // Map train bookings to the format expected by frontend
+    const trainBookingMap = new Map(
+      trainBookings.map(tb => [tb.bookingNumber, tb])
+    );
+    
+    // Enrich bookings with train details
+    const enrichedBookings = bookings.map(booking => {
+      if (booking.type === 'TRAIN' && booking.bookingNumber) {
+        const trainBooking = trainBookingMap.get(booking.bookingNumber);
+        if (trainBooking) {
+          return {
+            id: booking.id,
+            type: booking.type,
+            status: booking.status,
+            totalAmount: booking.totalPrice,
+            currency: booking.currency,
+            createdAt: booking.createdAt,
+            trainBooking: {
+              trainNumber: trainBooking.trainNumber,
+              trainName: trainBooking.trainName,
+              departureStation: trainBooking.fromStation,
+              arrivalStation: trainBooking.toStation,
+              departureTime: new Date(trainBooking.journeyDate + ' ' + trainBooking.departureTime).toISOString(),
+              arrivalTime: new Date(trainBooking.journeyDate + ' ' + trainBooking.arrivalTime).toISOString(),
+              class: trainBooking.class,
+              pnr: trainBooking.pnr,
+              passengers: trainBooking.passengers as any,
+            },
+          };
+        }
+      }
+      
+      return {
+        id: booking.id,
+        type: booking.type,
+        status: booking.status,
+        totalAmount: booking.totalPrice,
+        currency: booking.currency,
+        createdAt: booking.createdAt,
+      };
+    });
+    
+    res.json(enrichedBookings);
+  } catch (error) {
+    console.error('List bookings error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to retrieve bookings',
+    });
+  }
+});
+
+/**
  * GET /api/v1/bookings
  * List user's bookings with pagination
  */
@@ -262,6 +334,84 @@ router.get('/:id', authenticateToken, async (req: Request, res: Response) => {
     res.status(500).json({
       success: false,
       error: 'Failed to retrieve booking',
+    });
+  }
+});
+
+/**
+ * POST /api/v1/bookings/:id/cancel
+ * Cancel a booking (alternative endpoint)
+ */
+router.post('/:id/cancel',
+  requireAuth,
+  sanitizeInput,
+  requireOwnership('booking'),
+  async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.userId;
+    const { id } = req.params;
+    const { reason } = req.body;
+    
+    const booking = await prisma.booking.findFirst({
+      where: {
+        id,
+        userId,
+      },
+    });
+    
+    if (!booking) {
+      return res.status(404).json({
+        success: false,
+        error: 'Booking not found',
+      });
+    }
+    
+    if (booking.status === 'CANCELLED') {
+      return res.status(400).json({
+        success: false,
+        error: 'Booking is already cancelled',
+      });
+    }
+    
+    if (booking.status === 'COMPLETED') {
+      return res.status(400).json({
+        success: false,
+        error: 'Cannot cancel completed booking',
+      });
+    }
+    
+    // Process refund
+    let refund = null;
+    const metadata = booking.metadata as any;
+    if (metadata?.paymentIntentId) {
+      refund = await stripeService.createRefund({
+        paymentIntentId: metadata.paymentIntentId,
+        amount: Math.round(booking.totalPrice * 100), // Full refund
+        reason: reason || 'requested_by_customer',
+      });
+    }
+    
+    // Update booking status in database
+    const updatedBooking = await prisma.booking.update({
+      where: { id },
+      data: {
+        status: 'CANCELLED',
+      },
+    });
+    
+    res.json({
+      success: true,
+      data: {
+        booking: updatedBooking,
+        refund,
+      },
+      message: 'Booking cancelled successfully',
+    });
+  } catch (error) {
+    console.error('Cancel booking error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to cancel booking',
     });
   }
 });

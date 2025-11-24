@@ -570,6 +570,8 @@ enum BookingType {
   CAR
   ACTIVITY
   PACKAGE
+  TRAIN
+  ESIM
 }
 
 enum BookingStatus {
