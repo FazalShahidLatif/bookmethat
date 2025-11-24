@@ -1,4 +1,5 @@
-# 📧 Hostinger Email Setup Guide
+Name: JAZZCASH_PASSWORD
+Value: MOCK_PASSWORD# 📧 Hostinger Email Setup Guide
 
 Complete guide to setting up professional email for BookMeThat using Hostinger Business Email.
 
