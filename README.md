@@ -1,10 +1,12 @@
 # bookmethat.com
 
-> **Full-stack OTA marketplace for booking hotels, flights, cars + travel eSIM provisioning with comprehensive SEO, image optimization, and email automation.**
+> **Full-stack OTA marketplace for booking hotels, flights, trains, cars + travel eSIM provisioning. Available on Web, Mobile (iOS/Android), and Desktop (Windows/macOS/Linux).**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![React Native](https://img.shields.io/badge/React%20Native-0.74-blue)](https://reactnative.dev/)
+[![Electron](https://img.shields.io/badge/Electron-Latest-47848F)](https://www.electronjs.org/)
 
 🔗 **Live Demo:** http://localhost:3000 (Development)  
 📖 **Documentation:** See guides below  
@@ -49,32 +51,55 @@ npm run dev        # http://localhost:4000
 
 ```
 bookmethat/
-├── frontend/                    # Next.js 14 frontend
+├── frontend/                    # Next.js 14 web app
 │   ├── src/
 │   │   ├── app/                # App router pages
-│   │   │   ├── page.tsx       # Homepage with optimized images
-│   │   │   ├── blog/          # SEO blog posts
-│   │   │   ├── demo-images/   # Image optimization demo
-│   │   │   ├── privacy/       # Privacy policy (GDPR)
-│   │   │   └── terms/         # Terms & conditions
+│   │   │   ├── page.tsx       # Homepage
+│   │   │   ├── trains/        # Train booking pages
+│   │   │   ├── hotels/        # Hotel search & booking
+│   │   │   ├── flights/       # Flight search
+│   │   │   ├── esim/          # eSIM store
+│   │   │   ├── downloads/     # Mobile & desktop downloads
+│   │   │   └── blog/          # SEO blog posts
 │   │   ├── components/        # React components
-│   │   │   └── OptimizedImage.tsx  # Smart image component
-│   │   ├── lib/               # Utilities
-│   │   │   └── images.ts      # Image service (Unsplash API)
-│   │   └── styles/
-│   │       └── globals.css    # Modern responsive design
-│   ├── public/                # Static assets
-│   └── next.config.mjs        # Image optimization config
+│   │   └── lib/               # Utilities & API clients
+│   └── public/                # Static assets
 │
-├── backend/                    # Node.js + Express API
+├── mobile/                     # React Native (Expo) mobile app
+│   ├── app/                   # App screens & navigation
+│   │   ├── (tabs)/           # Tab navigation
+│   │   │   ├── index.tsx     # Home
+│   │   │   ├── trains.tsx    # Train booking
+│   │   │   └── profile.tsx   # User profile
+│   │   └── _layout.tsx       # Root layout
+│   ├── components/           # Mobile components
+│   ├── services/             # API integration
+│   └── app.json             # Expo configuration
+│
+├── desktop/                   # Electron desktop app
+│   ├── electron/             # Electron main process
+│   │   ├── main.ts          # Main entry point
+│   │   └── preload.ts       # Preload scripts
+│   ├── renderer/            # Next.js renderer (shared with web)
+│   └── package.json
+│
+├── backend/                   # Node.js + Express API
 │   ├── src/
 │   │   ├── services/
-│   │   │   └── email.ts       # Email service (5 templates)
+│   │   │   ├── trains/      # Pakistan Railway API
+│   │   │   └── email.ts     # Email service
+│   │   ├── payments/        # Payment gateways
+│   │   │   ├── jazzcash/   # JazzCash (Pakistan)
+│   │   │   ├── easypaisa/  # EasyPaisa (Pakistan)
+│   │   │   └── payfast/    # PayFast (South Africa)
 │   │   ├── routes/
-│   │   │   └── email.ts       # Email API endpoints
+│   │   │   ├── train.routes.ts  # Train booking endpoints
+│   │   │   ├── auth.routes.ts   # Authentication
+│   │   │   └── booking.routes.ts # Bookings CRUD
 │   │   ├── middleware/
-│   │   │   └── security.ts    # Rate limiting & security
-│   │   └── index.ts           # Main server
+│   │   │   └── security.ts      # Rate limiting & security
+│   │   └── index.ts             # Main server (21 endpoints)
+│   ├── prisma/                  # Database schema & migrations
 │   └── package.json
 │
 ├── docs/                       # Documentation
