@@ -9,6 +9,7 @@ import trainRoutes from './routes/train.routes';
 import jazzCashRoutes from './payments/jazzcash/jazzcash.routes';
 import payFastRoutes from './payments/payfast/payfast.routes';
 import easyPaisaRoutes from './payments/easypaisa/easypaisa.routes';
+import webhookRoutes from './routes/webhook.routes';
 import {
   helmetConfig,
   generalRateLimit,
@@ -71,6 +72,9 @@ app.use('/api/v1/trains', bookingRateLimit, trainRoutes);
 app.use('/api/v1/payments/jazzcash', jazzCashRoutes);
 app.use('/api/v1/payments/payfast', payFastRoutes);
 app.use('/api/v1/payments/easypaisa', easyPaisaRoutes);
+
+// Webhook routes (centralized for all payment gateways)
+app.use('/api/v1/webhooks', webhookRoutes);
 
 // Legacy endpoints for backward compatibility
 app.post('/api/v1/auth/login', authRateLimit, (req, res) => {
