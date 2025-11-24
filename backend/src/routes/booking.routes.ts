@@ -12,6 +12,7 @@ import { z } from 'zod';
 import { authenticateToken } from './auth.routes';
 import { bookingService } from '../services/mock/booking.service';
 import { stripeService } from '../services/mock/stripe.service';
+import { emailService } from '../services/email/email.service';
 import { prisma } from '../lib/prisma';
 import {
   requireAuth,
@@ -407,6 +408,16 @@ router.post('/:id/cancel',
       },
       message: 'Booking cancelled successfully',
     });
+
+    // Send cancellation email asynchronously
+    emailService.sendBookingCancellation({
+      bookingNumber: booking.bookingNumber,
+      guestName: booking.guestName,
+      guestEmail: booking.guestEmail,
+      refundAmount: booking.totalPrice,
+      currency: booking.currency,
+    }).catch(err => console.error('Cancellation email failed:', err));
+
   } catch (error) {
     console.error('Cancel booking error:', error);
     res.status(500).json({
@@ -485,6 +496,16 @@ router.put('/:id/cancel',
       },
       message: 'Booking cancelled successfully',
     });
+
+    // Send cancellation email asynchronously
+    emailService.sendBookingCancellation({
+      bookingNumber: booking.bookingNumber,
+      guestName: booking.guestName,
+      guestEmail: booking.guestEmail,
+      refundAmount: booking.totalPrice,
+      currency: booking.currency,
+    }).catch(err => console.error('Cancellation email failed:', err));
+
   } catch (error) {
     console.error('Cancel booking error:', error);
     res.status(500).json({

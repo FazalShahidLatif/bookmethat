@@ -5,6 +5,7 @@
 
 import express, { Request, Response } from 'express';
 import { pakistanRailwayService } from '../services/trains/pr-api.service';
+import { emailService } from '../services/email/email.service';
 import { authenticateToken } from './auth.routes';
 import {
   requireAuth,
@@ -211,6 +212,26 @@ router.post('/book',
           paymentTransactionId: paymentResult.transactionId,
         },
       });
+
+      // Send confirmation email asynchronously (don't wait for it)
+      emailService.sendTrainBookingConfirmation({
+        bookingId: booking.pnr,
+        pnr: booking.pnr,
+        trainNumber: booking.trainNumber,
+        trainName: booking.trainName,
+        fromStation: booking.fromStation,
+        toStation: booking.toStation,
+        journeyDate: booking.journeyDate,
+        departureTime: booking.departureTime,
+        arrivalTime: booking.arrivalTime,
+        class: booking.class,
+        passengers: booking.passengers,
+        totalAmount: booking.totalAmount,
+        currency: 'PKR',
+        guestName: passengers[0].name,
+        guestEmail: contactEmail,
+        guestPhone: contactPhone,
+      }).catch(err => console.error('Email sending failed:', err));
 
     } catch (paymentError: any) {
       // Cancel booking if payment processing fails

@@ -92,10 +92,20 @@ export interface TrainBookingResponse {
   pnr: string;          // Passenger Name Record
   trainNumber: string;
   trainName: string;
+  fromStation: string;
+  toStation: string;
+  journeyDate: string;
+  departureTime: string;
+  arrivalTime: string;
   date: string;
   class: string;
   seats: TrainSeat[];
-  passengers: number;
+  passengers: Array<{
+    name: string;
+    age: number;
+    gender: string;
+    cnic: string;
+  }>;
   totalAmount: number;
   status: 'CONFIRMED' | 'WAITING' | 'CANCELLED';
   paymentStatus: 'PENDING' | 'PAID' | 'REFUNDED';
@@ -362,11 +372,23 @@ class PakistanRailwayService {
   private getMockBooking(booking: TrainBookingRequest): TrainBookingResponse {
     const pnr = `PNR${Date.now().toString().slice(-8)}`;
     
+    // Find the train details from mock data to get station info
+    const mockTrain = this.getMockTrains({
+      from: 'KHI',
+      to: 'LHE',
+      date: booking.date,
+    })[0]; // Use first train as default
+    
     return {
       bookingId: `book-${Date.now()}`,
       pnr,
       trainNumber: booking.trainNumber,
       trainName: 'Karachi Express',
+      fromStation: mockTrain?.departure.station || 'Karachi Cantonment',
+      toStation: mockTrain?.arrival.station || 'Lahore Junction',
+      journeyDate: booking.date,
+      departureTime: mockTrain?.departure.time || '20:00',
+      arrivalTime: mockTrain?.arrival.time || '10:30',
       date: booking.date,
       class: booking.class,
       seats: booking.passengers.map((_, i) => ({
@@ -375,7 +397,7 @@ class PakistanRailwayService {
         isAvailable: true,
         price: booking.class === 'ECONOMY' ? 1200 : booking.class === 'AC_BUSINESS' ? 2500 : 4000,
       })),
-      passengers: booking.passengers.length,
+      passengers: booking.passengers,
       totalAmount: booking.passengers.length * (booking.class === 'ECONOMY' ? 1200 : booking.class === 'AC_BUSINESS' ? 2500 : 4000),
       status: 'CONFIRMED',
       paymentStatus: 'PENDING',
@@ -389,13 +411,21 @@ class PakistanRailwayService {
       pnr,
       trainNumber: '1-UP',
       trainName: 'Karachi Express',
+      fromStation: 'Karachi Cantonment',
+      toStation: 'Lahore Junction',
+      journeyDate: new Date().toISOString().split('T')[0],
+      departureTime: '20:00',
+      arrivalTime: '10:30',
       date: new Date().toISOString().split('T')[0],
       class: 'AC_BUSINESS',
       seats: [
         { seatNumber: '1A', coach: 'S-2', isAvailable: true, price: 2500 },
         { seatNumber: '2A', coach: 'S-2', isAvailable: true, price: 2500 },
       ],
-      passengers: 2,
+      passengers: [
+        { name: 'John Doe', age: 30, gender: 'MALE', cnic: '1234567890123' },
+        { name: 'Jane Doe', age: 28, gender: 'FEMALE', cnic: '9876543210987' },
+      ],
       totalAmount: 5000,
       status: 'CONFIRMED',
       paymentStatus: 'PAID',

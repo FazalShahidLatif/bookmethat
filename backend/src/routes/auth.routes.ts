@@ -12,6 +12,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { prisma } from '../lib/prisma';
+import { emailService } from '../services/email/email.service';
 
 const router = Router();
 
@@ -89,6 +90,13 @@ router.post('/register', async (req: Request, res: Response) => {
       },
       message: 'Account created successfully',
     });
+
+    // Send welcome email asynchronously (don't wait for it)
+    emailService.sendWelcomeEmail({
+      email: user.email,
+      name: `${user.firstName} ${user.lastName}`,
+    }).catch(err => console.error('Welcome email failed:', err));
+
   } catch (error: any) {
     if (error instanceof z.ZodError) {
       return res.status(400).json({
