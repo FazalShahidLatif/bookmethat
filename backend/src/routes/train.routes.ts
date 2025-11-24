@@ -6,6 +6,7 @@
 import express, { Request, Response } from 'express';
 import { pakistanRailwayService } from '../services/trains/pr-api.service';
 import { emailService } from '../services/email/email.service';
+import { smsService } from '../services/sms/sms.service';
 import { authenticateToken } from './auth.routes';
 import {
   requireAuth,
@@ -232,6 +233,23 @@ router.post('/book',
         guestEmail: contactEmail,
         guestPhone: contactPhone,
       }).catch(err => console.error('Email sending failed:', err));
+
+      // Send confirmation SMS asynchronously (don't wait for it)
+      smsService.sendTrainBookingConfirmation(
+        contactPhone,
+        {
+          pnr: booking.pnr,
+          trainNumber: booking.trainNumber,
+          trainName: booking.trainName,
+          fromStation: booking.fromStation,
+          toStation: booking.toStation,
+          journeyDate: booking.journeyDate,
+          departureTime: booking.departureTime,
+          passengerName: passengers[0].name,
+          totalAmount: booking.totalAmount,
+          currency: 'PKR',
+        }
+      ).catch(err => console.error('SMS sending failed:', err));
 
     } catch (paymentError: any) {
       // Cancel booking if payment processing fails

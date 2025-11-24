@@ -13,6 +13,7 @@ import { authenticateToken } from './auth.routes';
 import { bookingService } from '../services/mock/booking.service';
 import { stripeService } from '../services/mock/stripe.service';
 import { emailService } from '../services/email/email.service';
+import { smsService } from '../services/sms/sms.service';
 import { prisma } from '../lib/prisma';
 import {
   requireAuth,
@@ -418,6 +419,16 @@ router.post('/:id/cancel',
       currency: booking.currency,
     }).catch(err => console.error('Cancellation email failed:', err));
 
+    // Send cancellation SMS asynchronously
+    if (booking.guestPhone) {
+      smsService.sendBookingCancellation(
+        booking.guestPhone,
+        booking.bookingNumber,
+        booking.totalPrice,
+        booking.currency
+      ).catch(err => console.error('Cancellation SMS failed:', err));
+    }
+
   } catch (error) {
     console.error('Cancel booking error:', error);
     res.status(500).json({
@@ -505,6 +516,16 @@ router.put('/:id/cancel',
       refundAmount: booking.totalPrice,
       currency: booking.currency,
     }).catch(err => console.error('Cancellation email failed:', err));
+
+    // Send cancellation SMS asynchronously
+    if (booking.guestPhone) {
+      smsService.sendBookingCancellation(
+        booking.guestPhone,
+        booking.bookingNumber,
+        booking.totalPrice,
+        booking.currency
+      ).catch(err => console.error('Cancellation SMS failed:', err));
+    }
 
   } catch (error) {
     console.error('Cancel booking error:', error);
