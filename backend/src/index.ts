@@ -23,11 +23,25 @@ import {
   securityLogger,
   corsOptions,
 } from './middleware/security';
+import {
+  initializeSentry,
+  sentryRequestHandler,
+  sentryTracingHandler,
+  sentryErrorHandler,
+  testSentry,
+} from './config/sentry';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Security Middleware (Applied First)
+// Initialize Sentry (must be called before middleware)
+initializeSentry(app);
+
+// Sentry Request & Tracing Handlers (no-op in v8)
+app.use(sentryRequestHandler());
+app.use(sentryTracingHandler());
+
+// Security Middleware (Applied after Sentry)
 app.use(helmetConfig); // Security headers
 app.use(cors(corsOptions)); // CORS protection
 app.use(securityLogger); // Security logging
@@ -107,6 +121,9 @@ app.use((req, res) => {
   });
 });
 
+// Sentry Error Handler (must be before other error handlers)
+app.use(sentryErrorHandler());
+
 // Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error('🚨 Server Error:', err);
@@ -129,6 +146,7 @@ app.listen(PORT, () => {
   console.log(`   ✅ Security headers (Helmet)`);
   console.log(`   ✅ CORS protection`);
   console.log(`   ✅ Request logging`);
+  console.log(`   ✅ Error tracking (Sentry)`);
   console.log(`\n📚 API Endpoints:`);
   console.log(`   GET  /health - Health check`);
   console.log(`   POST /api/v1/auth/register - Create account`);
@@ -149,4 +167,9 @@ app.listen(PORT, () => {
   console.log(`   POST /api/v1/trains/book - Book train (requires auth)`);
   console.log(`   GET  /api/v1/trains/booking/:pnr - Get booking by PNR`);
   console.log(`   POST /api/v1/trains/cancel - Cancel booking (requires auth)`);
+  
+  // Test Sentry in development mode
+  if (process.env.NODE_ENV !== 'production') {
+    testSentry();
+  }
 });
