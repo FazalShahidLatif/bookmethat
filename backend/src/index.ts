@@ -135,8 +135,8 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 BookMeThat Backend API running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 BookMeThat Backend API running on port ${PORT}`);
   console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔧 Mock Mode: Stripe=${process.env.USE_MOCK_STRIPE !== 'false'}, Airalo=${process.env.USE_MOCK_AIRALO !== 'false'}, Booking=${process.env.USE_MOCK_BOOKING !== 'false'}`);
   console.log(`🔒 Security features enabled:`);
